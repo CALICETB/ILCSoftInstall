@@ -174,6 +174,8 @@ ExternalProject_Add( QT
     LIST_SEPARATOR %
 )
 
+SET(ENV{QTDIR} "${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT/${QT_version}")
+
 # ------------ ROOT -----------
 
 ExternalProject_Add( ROOT
