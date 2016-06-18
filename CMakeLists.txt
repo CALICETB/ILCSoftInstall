@@ -83,27 +83,26 @@ INCLUDE( DetectDistribution )
 # ------------ CLHEP ----------
 
 ExternalProject_Add( CLHEP
-    URL ${CLHEP_repository}
+    DOWNLOAD_COMMAND wget ${CLHEP_repository} && tar xzf clhep-${CLHEP_version}.tgz -C ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/CLHEP
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args}
-    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/CLHEP/build
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP
-    INSTALL_COMMAND make install
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}
     LIST_SEPARATOR %
 )
 
 # ------------ GSL ----------
 
 ExternalProject_Add( GSL
-    URL ${GSL_repository}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL
+    DOWNLOAD_COMMAND wget ${GSL_repository} && tar xzf gsl-${GSL_version}.tar.gz --strip 1 -C ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/GSL
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/GSL
     UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure
+    CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/GSL/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}
+    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}
     LIST_SEPARATOR %
 )
 
@@ -203,7 +202,6 @@ ExternalProject_Add( ROOT
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
 )
-
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
