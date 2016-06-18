@@ -157,7 +157,7 @@ ExternalProject_Add( CONDDB
     CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/build
     BUILD_COMMAND make -j4
-    NSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/${CONDB_version}
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/${CONDB_version}
     LIST_SEPARATOR %
 )
 
