@@ -31,7 +31,7 @@ ENDIF()
 # don't forget to update when releasing 
 # e.g. SET( Qt_version "v01-00-00" )
 
-SET( Qt_version       "4.7.4" )
+SET( QT_version       "4.7.4" )
 SET( ROOT_version     "5.34.36")
 SET( CLHEP_version    "2.1.4.1")
 SET( GSL_version      "1.14")
@@ -42,7 +42,7 @@ SET( XERCES_version   "3.1.3")
 
 #repositories of ilcsoft packages
 
-SET( Qt_repository         "http://ftp.vim.org/languages/qt/archive/qt/4.7/qt-everywhere-opensource-src-${Qt_version}.tar.gz" )
+SET( QT_repository         "http://ftp.vim.org/languages/qt/archive/qt/4.7/qt-everywhere-opensource-src-${QT_version}.tar.gz" )
 SET( ROOT_repository       "https://root.cern.ch/download/root_v${ROOT_version}.source.tar.gz" )
 SET( CLHEP_repository      "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/clhep-${CLHEP_version}.tgz" )
 SET( GSL_repository        "ftp://ftp.gnu.org/gnu/gsl/gsl-${GSL_version}.tar.gz" )
@@ -109,13 +109,13 @@ ExternalProject_Add( GSL
 # ------------ XERCES ----------
 
 ExternalProject_Add( XERCES
-    URL ${XERCES_repository}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces
+    DOWNLOAD_COMMAND wget ${XERCES_repository} && tar xzf xerces-c-${XERCES_version}.tar.gz --strip 1 -C ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/xerces
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/xerces
     UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure
+    CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/xerces/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}
+    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}
     LIST_SEPARATOR %
 )
 
@@ -124,12 +124,12 @@ ExternalProject_Add( XERCES
 ExternalProject_Add( ILCUTIL
     GIT_REPOSITORY ${ILCUTIL_repository}
     GIT_TAG ${ILCUTIL_version}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}/ilcutil
     UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CMAKE_ARGS ${common_cmake_args}
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}
     LIST_SEPARATOR %
 )
 
@@ -138,12 +138,12 @@ ExternalProject_Add( ILCUTIL
 ExternalProject_Add( CED
     GIT_REPOSITORY ${CED_repository}
     GIT_TAG ${CED_version}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}/CED
     UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CMAKE_ARGS ${common_cmake_args}
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}
     LIST_SEPARATOR %
 )
 
@@ -152,20 +152,20 @@ ExternalProject_Add( CED
 ExternalProject_Add( CONDDB
     GIT_REPOSITORY ${CONDDB_repository}
     GIT_TAG ${CONDDB_version}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/${CONDB_version}/CondDBMySQL
     UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CMAKE_ARGS ${common_cmake_args}
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/build
     BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
+    NSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/${CONDB_version}
     LIST_SEPARATOR %
 )
 
-# ----- Qt package -----
+# ----- QT package -----
 
-ExternalProject_Add( Qt
-    URL ${Qt_repository}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT
+ExternalProject_Add( QT
+    URL ${QT_repository}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT/${QT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ./configure -debug-and-release -opensource -confirm-license -no-qt3support -webkit -nomake examples -nomake demos
@@ -177,9 +177,9 @@ ExternalProject_Add( Qt
 # ------------ ROOT -----------
 
 ExternalProject_Add( ROOT
-    DEPENDS Qt GSL
+    DEPENDS QT GSL
     URL ${ROOT_repository}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/root
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/root/${ROOT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ./configure --with-cc=${CMAKE_C_COMPILER}
