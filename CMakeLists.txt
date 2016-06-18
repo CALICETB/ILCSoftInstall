@@ -133,7 +133,7 @@ ExternalProject_Add( ILCUTIL
     LIST_SEPARATOR %
 )
 
-LIST( APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version} )
+LIST( APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version} )
 
 # ------------ CED ----------
 
