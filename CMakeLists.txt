@@ -87,8 +87,10 @@ ExternalProject_Add( CLHEP
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/CLHEP
     UPDATE_COMMAND ""
     CMAKE_ARGS ${common_cmake_args}
+    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/CLHEP/build
     BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
+    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP
+    INSTALL_COMMAND make install
     LIST_SEPARATOR %
 )
 
