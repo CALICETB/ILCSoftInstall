@@ -84,7 +84,7 @@ INCLUDE( DetectDistribution )
 
 ExternalProject_Add( CLHEP
     URL ${CLHEP_repository}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
     CMAKE_ARGS ${common_cmake_args}
