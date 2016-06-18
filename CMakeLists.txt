@@ -136,6 +136,7 @@ ExternalProject_Add( ILCUTIL
 # ------------ CED ----------
 
 ExternalProject_Add( CED
+    DEPENDS ILCUTIL
     GIT_REPOSITORY ${CED_repository}
     GIT_TAG ${CED_version}
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}/CED
@@ -150,6 +151,7 @@ ExternalProject_Add( CED
 # ------------ CONDDB ----------
 
 ExternalProject_Add( CONDDB
+    DEPENDS ILCUTIL
     GIT_REPOSITORY ${CONDDB_repository}
     GIT_TAG ${CONDDB_version}
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/${CONDB_version}/CondDBMySQL
