@@ -127,7 +127,7 @@ ExternalProject_Add( ILCUTIL
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure
+    CMAKE_ARGS ${common_cmake_args}
     BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
@@ -141,7 +141,7 @@ ExternalProject_Add( CED
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure
+    CMAKE_ARGS ${common_cmake_args}
     BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
@@ -155,7 +155,7 @@ ExternalProject_Add( CONDDB
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure
+    CMAKE_ARGS ${common_cmake_args}
     BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
