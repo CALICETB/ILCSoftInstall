@@ -174,10 +174,6 @@ ExternalProject_Add( QT
     LIST_SEPARATOR %
 )
 
-SET(ENV{QTDIR} "${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT/${QT_version}")
-SET(ENV{PATH} "${PATH}:${QTDIR}/bin")
-SET(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH}:${QTDIR}/lib")
-
 # ------------ ROOT -----------
 
 ExternalProject_Add( ROOT
@@ -186,7 +182,8 @@ ExternalProject_Add( ROOT
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/root/${ROOT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure --with-cc=${CMAKE_C_COMPILER}
+    CONFIGURE_COMMAND export QTDIR=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT/${QT_version} && 
+    							  ./configure --with-cc=${CMAKE_C_COMPILER}
                                   --with-cxx=${CMAKE_CXX_COMPILER}
                                   --with-ld=${CMAKE_CXX_COMPILER}
                                   --fail-on-missing
