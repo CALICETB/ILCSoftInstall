@@ -83,10 +83,9 @@ INCLUDE( DetectDistribution )
 # ------------ CLHEP ----------
 
 ExternalProject_Add( CLHEP
-    DOWNLOAD_COMMAND "curl ${CLHEP_repository} | tar xzf --strip 1"
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP
+    URL ${CLHEP_repository}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/CLHEP
     UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
     CMAKE_ARGS ${common_cmake_args}
     BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
