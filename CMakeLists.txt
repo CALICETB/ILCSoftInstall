@@ -31,13 +31,25 @@ ENDIF()
 # don't forget to update when releasing 
 # e.g. SET( Qt_version "v01-00-00" )
 
-SET( Qt_version     "4.7.4" )
-SET( ROOT_version   "5.34.36")
+SET( Qt_version       "4.7.4" )
+SET( ROOT_version     "5.34.36")
+SET( CLHEP_version    "2.1.4.1")
+SET( GSL_version      "1.14")
+SET( ILCUTIL_version  "v01-02-01")
+SET( CED_version      "v01-09-02")
+SET( CONDDB_version   "CondDBMySQL_ILC-0-9-6")
+SET( XERCES_version   "3.1.3")
 
 #repositories of ilcsoft packages
 
-SET( Qt_repository  "http://ftp.vim.org/languages/qt/archive/qt/4.7/qt-everywhere-opensource-src-${Qt_version}.tar.gz" )
-SET( ROOT_repository "https://root.cern.ch/download/root_v${ROOT_version}.source.tar.gz" )
+SET( Qt_repository         "http://ftp.vim.org/languages/qt/archive/qt/4.7/qt-everywhere-opensource-src-${Qt_version}.tar.gz" )
+SET( ROOT_repository       "https://root.cern.ch/download/root_v${ROOT_version}.source.tar.gz" )
+SET( CLHEP_repository      "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/clhep-${CLHEP_version}.tgz" )
+SET( GSL_repository        "ftp://ftp.gnu.org/gnu/gsl/gsl-${GSL_version}.tar.gz" )
+SET( XERCES_repository     "http://mirrors.ae-online.de/apache//xerces/c/3/sources/xerces-c-${XERCES_version}.tar.gz" )
+SET( ILCUTIL_repository    "https://github.com/iLCSoft/iLCUtil.git" )
+SET( CED_repository        "https://github.com/iLCSoft/CED.git" )
+SET( CONDDB_repository     "https://github.com/iLCSoft/CondDBMySQL.git" )
 
 ###################################
 
@@ -68,6 +80,87 @@ SET( common_cmake_args
 
 INCLUDE( DetectDistribution )
 
+# ------------ CLHEP ----------
+
+ExternalProject_Add( CLHEP
+    URL ${CLHEP_repository}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP
+    UPDATE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ./configure
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
+# ------------ GSL ----------
+
+ExternalProject_Add( GSL
+    URL ${GSL_repository}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL
+    UPDATE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ./configure
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
+# ------------ XERCES ----------
+
+ExternalProject_Add( XERCES
+    URL ${XERCES_repository}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces
+    UPDATE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ./configure
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
+# ------------ ILCUTIL ----------
+
+ExternalProject_Add( ILCUTIL
+    GIT_REPOSITORY ${ILCUTIL_repository}
+    GIT_TAG ${ILCUTIL_version}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil
+    UPDATE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ./configure
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
+# ------------ CED ----------
+
+ExternalProject_Add( CED
+    GIT_REPOSITORY ${CED_repository}
+    GIT_TAG ${CED_version}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED
+    UPDATE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ./configure
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
+# ------------ CONDDB ----------
+
+ExternalProject_Add( CONDDB
+    GIT_REPOSITORY ${CONDDB_repository}
+    GIT_TAG ${CONDDB_version}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL
+    UPDATE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ./configure
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
 # ----- Qt package -----
 
 ExternalProject_Add( Qt
@@ -84,7 +177,7 @@ ExternalProject_Add( Qt
 # ------------ ROOT -----------
 
 ExternalProject_Add( ROOT
-    DEPENDS Qt
+    DEPENDS Qt GSL
     URL ${ROOT_repository}
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/root
     UPDATE_COMMAND ""
@@ -100,7 +193,7 @@ ExternalProject_Add( ROOT
                                   --enable-minuit2
                                   --enable-mysql
                                   --disable-oracle
-				  --disable-gfal
+				                  --disable-gfal
                                   --enable-python
                                   --enable-qt
                                   --enable-roofit
