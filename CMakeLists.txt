@@ -18,8 +18,14 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 # e.g. SET( Qt_version "v01-00-00" )
 
 SET( Qt_version     "4.7.4" )
+SET( ROOT_version   "5.34.36")
+
+#repositories of ilcsoft packages
 
 SET( Qt_repository  "http://ftp.vim.org/languages/qt/archive/qt/4.7/qt-everywhere-opensource-src-${Qt_version}.tar.gz" )
+SET( ROOT_repository "https://root.cern.ch/download/root_v${ROOT_version}.source.tar.gz" )
+
+###################################
 
 LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 INCLUDE( default_settings )
@@ -49,16 +55,47 @@ SET( common_cmake_args
 INCLUDE( DetectDistribution )
 
 # ----- Qt package -----
-ExternalProject_Add( QT
+
+ExternalProject_Add( Qt
     URL ${Qt_repository}
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure
-    BUILD_COMMAND make
+    CONFIGURE_COMMAND ./configure -debug-and-release -opensource -confirm-license -no-qt3support -webkit -nomake examples -nomake demos
+    BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
 )
+
+# ------------ ROOT -----------
+
+ExternalProject_Add( ROOT
+    DEPENDS Qt
+    URL ${ROOT_repository}
+    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/root
+    UPDATE_COMMAND ""
+    BUILD_IN_SOURCE 1
+    CONFIGURE_COMMAND ./configure --with-cc=${CMAKE_C_COMPILER}
+                                  --with-cxx=${CMAKE_CXX_COMPILER}
+                                  --with-ld=${CMAKE_CXX_COMPILER}
+                                  --fail-on-missing
+                                  --enable-gdml
+                                  --enable-genvector
+                                  --enable-krb5
+                                  --enable-mathmore
+                                  --enable-minuit2
+                                  --enable-mysql
+                                  --disable-oracle
+				  --disable-gfal
+                                  --enable-python
+                                  --enable-qt
+                                  --enable-roofit
+                                  --enable-table
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
