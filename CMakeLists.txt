@@ -175,6 +175,8 @@ ExternalProject_Add( QT
 )
 
 SET(ENV{QTDIR} "${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT/${QT_version}")
+SET(ENV{PATH} "${PATH}:${QTDIR}/bin")
+SET(ENV{LD_LIBRARY_PATH} "${LD_LIBRARY_PATH}:${QTDIR}/lib")
 
 # ------------ ROOT -----------
 
