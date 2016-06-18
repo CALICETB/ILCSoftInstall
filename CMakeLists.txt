@@ -133,6 +133,8 @@ ExternalProject_Add( ILCUTIL
     LIST_SEPARATOR %
 )
 
+SET ( ILCUTIL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}" )
+
 # ------------ CED ----------
 
 ExternalProject_Add( CED
