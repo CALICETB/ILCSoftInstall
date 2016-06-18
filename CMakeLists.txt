@@ -133,8 +133,6 @@ ExternalProject_Add( ILCUTIL
     LIST_SEPARATOR %
 )
 
-LIST( APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version} )
-
 # ------------ CED ----------
 
 ExternalProject_Add( CED
@@ -143,7 +141,7 @@ ExternalProject_Add( CED
     GIT_TAG ${CED_version}
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}/CED
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_PREFIX_PATH=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}
     BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}
