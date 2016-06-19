@@ -235,5 +235,7 @@ FILE( WRITE ${ILCSOFT_PATH}/init_ilcsoft.sh "export ILCSOFT=\${ILCSOFT_PATH}" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 
+MESSAGE( STATUS "Writing init_ilcsoft.sh in ${ILCSOFT_PATH}" )
+
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
