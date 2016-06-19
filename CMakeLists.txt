@@ -13,6 +13,8 @@ SET( ${PROJECT_NAME}_VERSION_MINOR 0 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" ON )
+OPTION( ENABLE_QT "Set to OFF to disable Qt build" ON )
+OPTION( ENABLE_BOOST "Set to OFF to disable BOOST build" ON )
 
 #################################################################
 # Require C++11                                                 #
@@ -87,13 +89,14 @@ INCLUDE( ILCPackageAddMacro )
 
 # Append Modules to a list
 
-LIST( APPEND Modules boost/${BOOST_version} )
 LIST( APPEND Modules CLHEP/${CLHEP_version} )
 LIST( APPEND Modules GSL/${GSL_version} )
 LIST( APPEND Modules xerces/${XERCES_version} )
 LIST( APPEND Modules ilcutil/${ILCUTIL_version} )
 LIST( APPEND Modules CED/${CED_version} )
+IF( ENABLE_QT )
 LIST( APPEND Modules QT/${QT_version} )
+ENDIF()
 LIST( APPEND Modules CondDBMySQL/${CONDDB_version} )
 LIST( APPEND Modules root/${ROOT_version} )
 LIST( APPEND Modules MarlinUtil/${MarlinUtil_version} )
@@ -101,6 +104,9 @@ LIST( APPEND Modules Marlin/${MARLIN_version} )
 LIST( APPEND Modules LCIO/${LCIO_version} )
 LIST( APPEND Modules lccd/${LCCD_version} )
 LIST( APPEND Modules gear/${GEAR_version} )
+IF( ENABLE_BOOST )
+LIST( APPEND Modules boost/${BOOST_version} )
+ENDIF()
 
 # ------ Creates ILCSoft.cmake --------------
 

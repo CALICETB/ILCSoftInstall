@@ -1,5 +1,7 @@
 # ------------ BOOST ----------
 
+IF ( ENABLE_BOOST )
+
 ILCSoftPackage_Add( BOOST
 	GIT_REPOSITORY ${BOOST_repository}
     GIT_TAG boost-${BOOST_version}
@@ -16,6 +18,7 @@ ILCSoftPackage_Add( BOOST
     LIST_SEPARATOR %
 )
 
+ENDIF()
 
 # ------------ CLHEP ----------
 
@@ -103,6 +106,8 @@ ILCSoftPackage_Add( CONDDB
 
 # ----- QT package -----
 
+IF( ENABLE_QT )
+
 ILCSoftPackage_Add( QT
     URL ${QT_repository}
     SOURCE_DIR ${ILCSOFT_PATH}/QT/${QT_version}
@@ -114,32 +119,40 @@ ILCSoftPackage_Add( QT
     LIST_SEPARATOR %
 )
 
+ENDIF()
 
 # ------------ ROOT -----------
 
 ILCSoftPackage_Add( ROOT
-    DEPENDS QT GSL CLHEP XERCES
+    DEPENDS GSL CLHEP XERCES
+    		IF ENABLE_QT THEN
+    		QT
+    		ENDIF
     URL ${ROOT_repository}
     SOURCE_DIR ${ILCSOFT_PATH}/root/${ROOT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && 
-    							  ./configure --with-cc=${CMAKE_C_COMPILER}
-                                  --with-cxx=${CMAKE_CXX_COMPILER}
-                                  --with-ld=${CMAKE_CXX_COMPILER}
-                                  --fail-on-missing
-                                  --enable-gdml
-                                  --enable-genvector
-                                  --enable-krb5
-                                  --enable-mathmore
-                                  --enable-minuit2
-                                  --enable-mysql
-                                  --disable-oracle
-				                  --disable-gfal
-                                  --enable-python
-                                  --enable-qt
-                                  --enable-roofit
-                                  --enable-table
+    CONFIGURE_COMMAND   IF ENABLE_QT THEN 
+    					export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && 
+    					ENDIF 
+    					./configure --with-cc=${CMAKE_C_COMPILER}
+                                    --with-cxx=${CMAKE_CXX_COMPILER}
+                                    --with-ld=${CMAKE_CXX_COMPILER}
+                                    --fail-on-missing
+                                    --enable-gdml
+                                    --enable-genvector
+                                    --enable-krb5
+                                    --enable-mathmore
+                                    --enable-minuit2
+                                    --enable-mysql
+                                    --disable-oracle
+				                    --disable-gfal
+                                    --enable-python
+                                    IF ENABLE_QT THEN
+                                    --enable-qt
+                                    ENDIF
+                                    --enable-roofit
+                                    --enable-table
     BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
