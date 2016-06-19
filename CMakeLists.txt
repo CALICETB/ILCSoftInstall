@@ -231,7 +231,7 @@ INCLUDE( CreateILCSoftCMake )
 
 # ------ Prepare init_ilcsoft.sh ------------
 
-FILE( WRITE ${ILCSOFT_PATH}/init_ilcsoft.sh "export ILCSOFT=\${ILCSOFT_PATH}" )
+FILE( WRITE ${ILCSOFT_PATH}/init_ilcsoft.sh "export ILCSOFT=${ILCSOFT_PATH}" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 
