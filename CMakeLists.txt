@@ -123,8 +123,7 @@ INCLUDE( DetectDistribution )
 
 # ------------ CLHEP ----------
 
-ILCSoftPackage_Add( 
-	CLHEP
+ILCSoftPackage_Add( CLHEP
     DOWNLOAD_COMMAND wget ${CLHEP_repository} && tar xzf clhep-${CLHEP_version}.tgz -C ${ILCSOFT_PATH}/CLHEP
     SOURCE_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}/CLHEP
     UPDATE_COMMAND ""
@@ -223,7 +222,7 @@ ILCSoftPackage_Add( QT
 # ------------ ROOT -----------
 
 ILCSoftPackage_Add( ROOT
-    DEPENDS QT GSL
+    DEPENDS QT GSL CLHEP
     URL ${ROOT_repository}
     SOURCE_DIR ${ILCSOFT_PATH}/root/${ROOT_version}
     UPDATE_COMMAND ""
@@ -268,7 +267,7 @@ ILCSoftPackage_Add( GEAR
 # ------ LCIO ---------------------
 
 ILCSoftPackage_Add( LCIO
-    DEPENDS ROOT
+    DEPENDS ROOT CLHEP
     GIT_REPOSITORY ${LCIO_repository}
     GIT_TAG ${LCIO_version}
     SOURCE_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}/LCIO
