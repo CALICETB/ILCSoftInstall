@@ -80,58 +80,68 @@ SET( common_cmake_args
 
 INCLUDE( DetectDistribution )
 
+SET ( ILCSOFT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft )
+
 # ------------ CLHEP ----------
 
 ExternalProject_Add( CLHEP
-    DOWNLOAD_COMMAND wget ${CLHEP_repository} && tar xzf clhep-${CLHEP_version}.tgz -C ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/CLHEP
+    DOWNLOAD_COMMAND wget ${CLHEP_repository} && tar xzf clhep-${CLHEP_version}.tgz -C ${ILCSOFT_PATH}/CLHEP
+    SOURCE_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}/CLHEP
     UPDATE_COMMAND ""
     CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}/build
+    BINARY_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CLHEP/${CLHEP_version}
+    INSTALL_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}
     LIST_SEPARATOR %
 )
+
+LIST( APPEND Modules CLHEP/${CLHEP_version} )
 
 # ------------ GSL ----------
 
 ExternalProject_Add( GSL
-    DOWNLOAD_COMMAND wget ${GSL_repository} && tar xzf gsl-${GSL_version}.tar.gz --strip 1 -C ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/GSL
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/GSL
+    DOWNLOAD_COMMAND wget ${GSL_repository} && tar xzf gsl-${GSL_version}.tar.gz --strip 1 -C ${ILCSOFT_PATH}/GSL/${GSL_version}/GSL
+    SOURCE_DIR ${ILCSOFT_PATH}/GSL/${GSL_version}/GSL
     UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/GSL/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}
-    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}/build
+    CONFIGURE_COMMAND ${ILCSOFT_PATH}/GSL/${GSL_version}/GSL/configure --prefix=${ILCSOFT_PATH}/GSL/${GSL_version}
+    BINARY_DIR ${ILCSOFT_PATH}/GSL/${GSL_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/GSL/${GSL_version}
+    INSTALL_DIR ${ILCSOFT_PATH}/GSL/${GSL_version}
     LIST_SEPARATOR %
 )
+
+LIST( APPEND Modules GSL/${GSL_version} )
 
 # ------------ XERCES ----------
 
 ExternalProject_Add( XERCES
-    DOWNLOAD_COMMAND wget ${XERCES_repository} && tar xzf xerces-c-${XERCES_version}.tar.gz --strip 1 -C ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/xerces
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/xerces
+    DOWNLOAD_COMMAND wget ${XERCES_repository} && tar xzf xerces-c-${XERCES_version}.tar.gz --strip 1 -C ${ILCSOFT_PATH}/xerces/${XERCES_version}/xerces
+    SOURCE_DIR ${ILCSOFT_PATH}/xerces/${XERCES_version}/xerces
     UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/xerces/configure --prefix=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}
-    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}/build
+    CONFIGURE_COMMAND ${ILCSOFT_PATH}/xerces/${XERCES_version}/xerces/configure --prefix=${ILCSOFT_PATH}/xerces/${XERCES_version}
+    BINARY_DIR ${ILCSOFT_PATH}/xerces/${XERCES_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/xerces/${XERCES_version}
+    INSTALL_DIR ${ILCSOFT_PATH}/xerces/${XERCES_version}
     LIST_SEPARATOR %
 )
+
+LIST( APPEND Modules xerces/${XERCES_version} )
 
 # ------------ ILCUTIL ----------
 
 ExternalProject_Add( ILCUTIL
     GIT_REPOSITORY ${ILCUTIL_repository}
     GIT_TAG ${ILCUTIL_version}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}/ilcutil
+    SOURCE_DIR ${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}/ilcutil
     UPDATE_COMMAND ""
     CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}/build
+    BINARY_DIR ${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}
+    INSTALL_DIR ${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}
     LIST_SEPARATOR %
 )
+
+LIST( APPEND Modules ilcutil/${ILCUTIL_version} )
 
 # ------------ CED ----------
 
@@ -139,14 +149,16 @@ ExternalProject_Add( CED
     DEPENDS ILCUTIL
     GIT_REPOSITORY ${CED_repository}
     GIT_TAG ${CED_version}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}/CED
+    SOURCE_DIR ${ILCSOFT_PATH}/CED/${CED_version}/CED
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_PREFIX_PATH=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}
-    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}/build
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_PREFIX_PATH=<INSTALL_DIR>
+    BINARY_DIR ${ILCSOFT_PATH}/CED/${CED_version}/build
     BUILD_COMMAND make -j4
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CED/${CED_version}
+    INSTALL_DIR ${ILCSOFT_PATH}/CED/${CED_version}
     LIST_SEPARATOR %
 )
+
+LIST( APPEND Modules CED/${CED_version} )
 
 # ------------ CONDDB ----------
 
@@ -154,20 +166,22 @@ ExternalProject_Add( CONDDB
     DEPENDS ILCUTIL
     GIT_REPOSITORY ${CONDDB_repository}
     GIT_TAG ${CONDDB_version}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/${CONDB_version}/CondDBMySQL
+    SOURCE_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/CondDBMySQL
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_PREFIX_PATH=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/ilcutil/${ILCUTIL_version}
-    BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/build
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_PREFIX_PATH=<INSTALL_DIR>
+    BINARY_DIR ${ILCSOFT_PATH}/CondDBMySQL/build
     BUILD_COMMAND make -j4
-    INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/CondDBMySQL/${CONDB_version}
+    INSTALL_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}
     LIST_SEPARATOR %
 )
+
+LIST( APPEND Modules CondDBMySQL/${CONDDB_version} )
 
 # ----- QT package -----
 
 ExternalProject_Add( QT
     URL ${QT_repository}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT/${QT_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/QT/${QT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
     CONFIGURE_COMMAND ./configure -debug-and-release -opensource -confirm-license -no-qt3support -webkit -nomake examples -nomake demos
@@ -176,15 +190,17 @@ ExternalProject_Add( QT
     LIST_SEPARATOR %
 )
 
+LIST( APPEND Modules QT/${QT_version} )
+
 # ------------ ROOT -----------
 
 ExternalProject_Add( ROOT
     DEPENDS QT GSL
     URL ${ROOT_repository}
-    SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/root/${ROOT_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/root/${ROOT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND export QTDIR=${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft/QT/${QT_version} && 
+    CONFIGURE_COMMAND export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && 
     							  ./configure --with-cc=${CMAKE_C_COMPILER}
                                   --with-cxx=${CMAKE_CXX_COMPILER}
                                   --with-ld=${CMAKE_CXX_COMPILER}
@@ -205,6 +221,27 @@ ExternalProject_Add( ROOT
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
 )
+
+LIST( APPEND Modules root/${ROOT_version} )
+
+# ------ Creates ILCSoft.cmake --------------
+
+STRING( TIMESTAMP TIME "%Y-%m-%d %H:%M:%S" )
+
+FILE( WRITE ${ILCSOFT_PATH}/ILCSoft.cmake  "################################################################################\n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "# Environment script generated by CMake on ${TIME} \n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "# for the installation located at [ ${ILCSOFT_PATH} ]\n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "################################################################################\n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "\n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "SET( ILC_HOME \"${ILCSOFT_PATH}\" CACHE PATH \"Path to ILC Software\" FORCE)\n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "MARK_AS_ADVANCED( ILC_HOME )\n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "\n" )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "SET( CMAKE_PREFIX_PATH\n" )
+FOREACH( mod ${Modules} )
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "\t \${ILC_HOME}/${mod};\n" )
+ENDFOREACH()
+FILE( APPEND ${ILCSOFT_PATH}/ILCSoft.cmake "CACHE PATH \"CMAKE_PREFIX_PATH\" FORCE )\n" )
+
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
