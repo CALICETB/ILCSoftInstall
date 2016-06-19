@@ -12,21 +12,27 @@ SET( ${PROJECT_NAME}_VERSION_MAJOR 1 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 0 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
+OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" ON )
+
 #################################################################
 # Require C++11                                                 #
 #################################################################
 
+IF ( ENABLE_C++11 )
+
 INCLUDE( CheckCXXCompilerFlag )
-
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-
 IF( COMPILER_SUPPORTS_CXX11 )
 SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ELSE()
 MESSAGE( SEND_ERROR "Requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
 
+ENDIF()
+
+IF ( NOT ILCSOFT_PATH )
 SET ( ILCSOFT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft )
+ENDIF()
 
 ###############################
 # versions of ilcsoft subpackages
@@ -42,6 +48,7 @@ SET( ILCUTIL_version  "v01-02-01")
 SET( CED_version      "v01-09-02")
 SET( CONDDB_version   "CondDBMySQL_ILC-0-9-6")
 SET( XERCES_version   "3.1.3")
+SET( BOOST_version    "1.58.0" )
 
 ### Core
 SET( MARLIN_version      "v01-08" )
@@ -61,6 +68,7 @@ SET( XERCES_repository     "http://mirrors.ae-online.de/apache//xerces/c/3/sourc
 SET( ILCUTIL_repository    "https://github.com/iLCSoft/iLCUtil.git" )
 SET( CED_repository        "https://github.com/iLCSoft/CED.git" )
 SET( CONDDB_repository     "https://github.com/iLCSoft/CondDBMySQL.git" )
+SET( BOOST_repository      "https://github.com/boostorg/boost.git" )
 
 ### Core
 SET( MARLIN_repository      "https://github.com/iLCSoft/Marlin.git" )
@@ -117,212 +125,14 @@ SET( common_cmake_args
      "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH_FIXED}"
      "-DCMAKE_MODULE_PATH=${CMAKE_MODULE_PATH_FIXED}"
      "-DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}"
+     "-DINSTALL_DOC=OFF"
 )
 
 INCLUDE( DetectDistribution )
 
-# ------------ CLHEP ----------
+INCLUDE ( ILCSoft_Base )
 
-ILCSoftPackage_Add( CLHEP
-    DOWNLOAD_COMMAND wget ${CLHEP_repository} && tar xzf clhep-${CLHEP_version}.tgz -C ${ILCSOFT_PATH}/CLHEP
-    SOURCE_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}/CLHEP
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    BINARY_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}
-    LIST_SEPARATOR %
-)
-
-# ------------ GSL ----------
-
-ILCSoftPackage_Add( GSL
-    DOWNLOAD_COMMAND wget ${GSL_repository} && tar xzf gsl-${GSL_version}.tar.gz --strip 1 -C ${ILCSOFT_PATH}/GSL/${GSL_version}/GSL
-    SOURCE_DIR ${ILCSOFT_PATH}/GSL/${GSL_version}/GSL
-    UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ${ILCSOFT_PATH}/GSL/${GSL_version}/GSL/configure --prefix=${ILCSOFT_PATH}/GSL/${GSL_version}
-    BINARY_DIR ${ILCSOFT_PATH}/GSL/${GSL_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/GSL/${GSL_version}
-    LIST_SEPARATOR %
-)
-
-
-# ------------ XERCES ----------
-
-ILCSoftPackage_Add( XERCES
-    DOWNLOAD_COMMAND wget ${XERCES_repository} && tar xzf xerces-c-${XERCES_version}.tar.gz --strip 1 -C ${ILCSOFT_PATH}/xerces/${XERCES_version}/xerces
-    SOURCE_DIR ${ILCSOFT_PATH}/xerces/${XERCES_version}/xerces
-    UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ${ILCSOFT_PATH}/xerces/${XERCES_version}/xerces/configure --prefix=${ILCSOFT_PATH}/xerces/${XERCES_version}
-    BINARY_DIR ${ILCSOFT_PATH}/xerces/${XERCES_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/xerces/${XERCES_version}
-    LIST_SEPARATOR %
-)
-
-# ------------ ILCUTIL ----------
-
-ILCSoftPackage_Add( ILCUTIL
-    GIT_REPOSITORY ${ILCUTIL_repository}
-    GIT_TAG ${ILCUTIL_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}/ilcutil
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    BINARY_DIR ${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}
-    LIST_SEPARATOR %
-)
-
-# ------------ CED ----------
-
-ILCSoftPackage_Add( CED
-    DEPENDS ILCUTIL
-    GIT_REPOSITORY ${CED_repository}
-    GIT_TAG ${CED_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/CED/${CED_version}/CED
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
-    BINARY_DIR ${ILCSOFT_PATH}/CED/${CED_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/CED/${CED_version}
-    LIST_SEPARATOR %
-)
-
-# ------------ CONDDB ----------
-
-ILCSoftPackage_Add( CONDDB
-    DEPENDS ILCUTIL
-    GIT_REPOSITORY ${CONDDB_repository}
-    GIT_TAG ${CONDDB_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/CondDBMySQL
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
-    BINARY_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}
-    LIST_SEPARATOR %
-)
-
-# ----- QT package -----
-
-ILCSoftPackage_Add( QT
-    URL ${QT_repository}
-    SOURCE_DIR ${ILCSOFT_PATH}/QT/${QT_version}
-    UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure -debug-and-release -opensource -confirm-license -no-qt3support -webkit -nomake examples -nomake demos
-    BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
-    LIST_SEPARATOR %
-)
-
-
-# ------------ ROOT -----------
-
-ILCSoftPackage_Add( ROOT
-    DEPENDS QT GSL CLHEP
-    URL ${ROOT_repository}
-    SOURCE_DIR ${ILCSOFT_PATH}/root/${ROOT_version}
-    UPDATE_COMMAND ""
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && 
-    							  ./configure --with-cc=${CMAKE_C_COMPILER}
-                                  --with-cxx=${CMAKE_CXX_COMPILER}
-                                  --with-ld=${CMAKE_CXX_COMPILER}
-                                  --fail-on-missing
-                                  --enable-gdml
-                                  --enable-genvector
-                                  --enable-krb5
-                                  --enable-mathmore
-                                  --enable-minuit2
-                                  --enable-mysql
-                                  --disable-oracle
-				                  --disable-gfal
-                                  --enable-python
-                                  --enable-qt
-                                  --enable-roofit
-                                  --enable-table
-    BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
-    LIST_SEPARATOR %
-)
-
-# ------ Gear ---------------------
-
-ILCSoftPackage_Add( GEAR
-    DEPENDS ROOT ILCUTIL
-    GIT_REPOSITORY ${GEAR_repository}
-    GIT_TAG ${GEAR_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}/gear
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DGEAR_TGEO=ON -C ${ILCSOFT_PATH}/ILCSoft.cmake
-    BINARY_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}
-    LIST_SEPARATOR %
-)
-
-# ------ LCIO ---------------------
-
-ILCSoftPackage_Add( LCIO
-    DEPENDS ROOT CLHEP
-    GIT_REPOSITORY ${LCIO_repository}
-    GIT_TAG ${LCIO_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}/LCIO
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DBUILD_ROOTDICT=ON -C ${ILCSOFT_PATH}/ILCSoft.cmake
-    BINARY_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}
-    LIST_SEPARATOR %
-)
-
-# ------ LCCD ---------------------
-
-ILCSoftPackage_Add( LCCD
-    DEPENDS ILCUTIL LCIO CONDDB
-    GIT_REPOSITORY ${LCCD_repository}
-    GIT_TAG ${LCCD_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/lccd
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
-    BINARY_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}
-    LIST_SEPARATOR %
-)
-
-# ------ Marlin ---------------------
-
-ILCSoftPackage_Add( MARLIN
-    DEPENDS ILCUTIL LCIO GEAR CLHEP LCCD 
-    GIT_REPOSITORY ${MARLIN_repository}
-    GIT_TAG ${MARLIN_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}/Marlin
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DMARLIN_AIDA=OFF -C ${ILCSOFT_PATH}/ILCSoft.cmake
-    BINARY_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}
-    LIST_SEPARATOR %
-)
-
-# ------ MarlinUtil ------------------
-
-ILCSoftPackage_Add( MarlinUtil
-    DEPENDS ILCUTIL MARLIN CED CLHEP GSL
-    GIT_REPOSITORY ${MarlinUtil_repository}
-    GIT_TAG ${MarlinUtil_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/MarlinUtil
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
-    BINARY_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}
-    LIST_SEPARATOR %
-)
+INCLUDE ( ILCSoft_Core )
 
 # ------ Prepare init_ilcsoft.sh ------------
 
