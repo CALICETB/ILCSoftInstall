@@ -6,7 +6,7 @@ ILCSoftPackage_Add( BOOST
     SOURCE_DIR ${ILCSOFT_PATH}/boost/${BOOST_version}/boost
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ${ILCSOFT_PATH}/boost/${BOOST_version}/boost/bootstrap.sh 
-    BINARY_DIR ${ILCSOFT_PATH}/boost/${BOOST_version}/build
+    BUILD_IN_SOURCE 1
     BUILD_COMMAND ${ILCSOFT_PATH}/boost/${BOOST_version}/boost/b2 install 
     									--prefix=${ILCSOFT_PATH}/boost/${BOOST_version}
     									--threading=single,multi
