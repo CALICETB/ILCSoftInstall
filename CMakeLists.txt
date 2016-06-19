@@ -96,7 +96,6 @@ LIST( APPEND Modules gear/${GEAR_version} )
 # ------ Creates ILCSoft.cmake --------------
 
 INCLUDE( CreateILCSoftCMake )
-LIST( APPEND CMAKE_MODULE_PATH ${ILCSOFT_PATH} )
 
 ###################################
 
@@ -185,7 +184,7 @@ ILCSoftPackage_Add( CED
     GIT_TAG ${CED_version}
     SOURCE_DIR ${ILCSOFT_PATH}/CED/${CED_version}/CED
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/CED/${CED_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/CED/${CED_version}
@@ -200,7 +199,7 @@ ILCSoftPackage_Add( CONDDB
     GIT_TAG ${CONDDB_version}
     SOURCE_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/CondDBMySQL
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}
@@ -259,7 +258,7 @@ ILCSoftPackage_Add( GEAR
     GIT_TAG ${GEAR_version}
     SOURCE_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}/gear
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DGEAR_TGEO=ON
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DGEAR_TGEO=ON -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}
@@ -274,7 +273,7 @@ ILCSoftPackage_Add( LCIO
     GIT_TAG ${LCIO_version}
     SOURCE_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}/LCIO
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DBUILD_ROOTDICT=ON
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DBUILD_ROOTDICT=ON -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}
@@ -289,7 +288,7 @@ ILCSoftPackage_Add( LCCD
     GIT_TAG ${LCCD_version}
     SOURCE_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/lccd
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}
@@ -304,7 +303,7 @@ ILCSoftPackage_Add( MARLIN
     GIT_TAG ${MARLIN_version}
     SOURCE_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}/Marlin
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DMARLIN_AIDA=OFF 
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DMARLIN_AIDA=OFF -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}
@@ -319,7 +318,7 @@ ILCSoftPackage_Add( MarlinUtil
     GIT_TAG ${MarlinUtil_version}
     SOURCE_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/MarlinUtil
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}
