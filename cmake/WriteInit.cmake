@@ -1,5 +1,5 @@
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh  "###########################\n" )
-FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh  "${name}\n" )
+FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh  "#\t ${name}\n" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh  "###########################\n" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh  "export ${name}_DIR=${targetdir}\n" )
 	IF( EXISTS "${targetdir}/bin" AND IS_DIRECTORY "${targetdir}/bin")
