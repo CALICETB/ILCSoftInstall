@@ -9,9 +9,8 @@ ILCSoftPackage_Add( BOOST
     BUILD_IN_SOURCE 1
     BUILD_COMMAND ${ILCSOFT_PATH}/boost/${BOOST_version}/boost/b2 install 
     									--prefix=${ILCSOFT_PATH}/boost/${BOOST_version}
-    									--threading=single,multi
-    									--link=static,shared
-    									--variant=release
+    									--threading=multi
+    									--link=shared
     									-j4
     INSTALL_DIR ${ILCSOFT_PATH}/boost/${BOOST_version}
     LIST_SEPARATOR %
