@@ -60,7 +60,7 @@ ILCSoftPackage_Add( MARLIN
 
 # ------ MarlinUtil ------------------
 
-ILCSoftPackage_Add( MarlinUtil
+ILCSoftPackage_Add( MARLINUTIL
     DEPENDS ILCUTIL MARLIN CED CLHEP GSL
     GIT_REPOSITORY ${MarlinUtil_repository}
     GIT_TAG ${MarlinUtil_version}
