@@ -26,7 +26,7 @@ ExternalProject_Add(
 
 ExternalProject_Add_Step(${targetname} after_install 
 	WORKING_DIRECTORY ${ILCSOFT_PATH}
-	COMMAND ${CMAKE_COMMAND} -DILCSOFT_PATH=${ILCSOFT_PATH} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WriteInit.cmake
+	COMMAND ${CMAKE_COMMAND} -DILCSOFT_PATH=${ILCSOFT_PATH} -Dname=${targetname} -Dtargetdir=${targetdir} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WriteInit.cmake
 	COMMENT "Writing environment variables to init_ilcsoft.sh"
 	DEPENDEES install
 )
