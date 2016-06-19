@@ -251,21 +251,6 @@ ILCSoftPackage_Add( ROOT
     LIST_SEPARATOR %
 )
 
-# ------ MarlinUtil ------------------
-
-ILCSoftPackage_Add( MarlinUtil
-    DEPENDS ILCUTIL Marlin CED CLHEP GSL
-    GIT_REPOSITORY ${MarlinUtil_repository}
-    GIT_TAG ${MarlinUtil_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/MarlinUtil
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    BINARY_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}
-    LIST_SEPARATOR %
-)
-
 # ------ Gear ---------------------
 
 ILCSoftPackage_Add( GEAR
@@ -298,7 +283,7 @@ ILCSoftPackage_Add( LCIO
 
 # ------ Marlin ---------------------
 
-ILCSoftPackage_Add( Marlin
+ILCSoftPackage_Add( MARLIN
     DEPENDS ILCUTIL LCIO GEAR CLHEP LCCD 
     GIT_REPOSITORY ${MARLIN_repository}
     GIT_TAG ${MARLIN_version}
@@ -308,6 +293,21 @@ ILCSoftPackage_Add( Marlin
     BINARY_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}
+    LIST_SEPARATOR %
+)
+
+# ------ MarlinUtil ------------------
+
+ILCSoftPackage_Add( MarlinUtil
+    DEPENDS ILCUTIL MARLIN CED CLHEP GSL
+    GIT_REPOSITORY ${MarlinUtil_repository}
+    GIT_TAG ${MarlinUtil_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/MarlinUtil
+    UPDATE_COMMAND ""
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}
     LIST_SEPARATOR %
 )
 
