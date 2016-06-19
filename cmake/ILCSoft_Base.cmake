@@ -12,7 +12,6 @@ ILCSoftPackage_Add( BOOST
     									--threading=multi
     									--link=shared
     									-j4
-    INSTALL_DIR ${ILCSOFT_PATH}/boost/${BOOST_version}
     LIST_SEPARATOR %
 )
 
