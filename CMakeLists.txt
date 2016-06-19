@@ -87,6 +87,7 @@ INCLUDE( ILCPackageAddMacro )
 
 # Append Modules to a list
 
+LIST( APPEND Modules boost/${BOOST_version} )
 LIST( APPEND Modules CLHEP/${CLHEP_version} )
 LIST( APPEND Modules GSL/${GSL_version} )
 LIST( APPEND Modules xerces/${XERCES_version} )
