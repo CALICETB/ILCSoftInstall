@@ -12,6 +12,7 @@ ILCSoftPackage_Add( BOOST
     									--threading=multi
     									--link=shared
     									-j4
+    INSTALL_COMMAND ""
     LIST_SEPARATOR %
 )
 
