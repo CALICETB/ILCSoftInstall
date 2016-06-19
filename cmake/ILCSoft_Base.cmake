@@ -2,7 +2,7 @@
 
 ILCSoftPackage_Add( BOOST
 	GIT_REPOSITORY ${BOOST_repository}
-    GIT_TAG ${BOOST_version}
+    GIT_TAG boost-${BOOST_version}
     SOURCE_DIR ${ILCSOFT_PATH}/boost/${BOOST_version}/boost
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ${ILCSOFT_PATH}/boost/${BOOST_version}/boost/bootstrap.sh 
