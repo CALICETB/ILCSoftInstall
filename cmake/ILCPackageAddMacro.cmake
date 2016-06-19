@@ -28,6 +28,7 @@ ExternalProject_Add_Step(${targetname} after_install
 	WORKING_DIRECTORY ${ILCSOFT_PATH}
 	COMMAND write_init
 	COMMENT "Writing environment variables to init_ilcsoft.sh"
+	DEPENDEES install
 )
 
 function( write_init )
