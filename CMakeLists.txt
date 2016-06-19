@@ -26,11 +26,14 @@ ELSE()
 MESSAGE( SEND_ERROR "Requires C++11 support. Please upgrade your compiler !" )
 ENDIF()
 
+SET ( ILCSOFT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft )
+
 ###############################
 # versions of ilcsoft subpackages
 # don't forget to update when releasing 
 # e.g. SET( Qt_version "v01-00-00" )
 
+### Base
 SET( QT_version       "4.7.4" )
 SET( ROOT_version     "5.34.36")
 SET( CLHEP_version    "2.1.4.1")
@@ -40,8 +43,16 @@ SET( CED_version      "v01-09-02")
 SET( CONDDB_version   "CondDBMySQL_ILC-0-9-6")
 SET( XERCES_version   "3.1.3")
 
+### Core
+SET( MARLIN_version      "v01-08" )
+SET( LCIO_version        "v02-07" )
+SET( MarlinUtil_version "v01-09" )
+SET( LCCD_version        "v01-03" )
+SET( GEAR_version        "v01-05" )
+
 #repositories of ilcsoft packages
 
+### Base
 SET( QT_repository         "http://ftp.vim.org/languages/qt/archive/qt/4.7/qt-everywhere-opensource-src-${QT_version}.tar.gz" )
 SET( ROOT_repository       "https://root.cern.ch/download/root_v${ROOT_version}.source.tar.gz" )
 SET( CLHEP_repository      "http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/clhep-${CLHEP_version}.tgz" )
@@ -50,6 +61,13 @@ SET( XERCES_repository     "http://mirrors.ae-online.de/apache//xerces/c/3/sourc
 SET( ILCUTIL_repository    "https://github.com/iLCSoft/iLCUtil.git" )
 SET( CED_repository        "https://github.com/iLCSoft/CED.git" )
 SET( CONDDB_repository     "https://github.com/iLCSoft/CondDBMySQL.git" )
+
+### Core
+SET( MARLIN_repository      "https://github.com/iLCSoft/Marlin.git" )
+SET( LCIO_repository        "https://github.com/iLCSoft/LCIO.git" )
+SET( MarlinUtil_repository  "https://github.com/iLCSoft/MarlinUtil.git" )
+SET( LCCD_repository        "https://github.com/iLCSoft/LCCD.git" )
+SET( GEAR_repository        "https://github.com/iLCSoft/GEAR.git" )
 
 ###################################
 
@@ -69,6 +87,16 @@ LIST( APPEND Modules CED/${CED_version} )
 LIST( APPEND Modules QT/${QT_version} )
 LIST( APPEND Modules CondDBMySQL/${CONDDB_version} )
 LIST( APPEND Modules root/${ROOT_version} )
+LIST( APPEND Modules MarlinUtil/${MarlinUtil_version} )
+LIST( APPEND Modules Marlin/${MARLIN_version} )
+LIST( APPEND Modules LCIO/${LCIO_version} )
+LIST( APPEND Modules lccd/${LCCD_version} )
+LIST( APPEND Modules gear/${GEAR_version} )
+
+# ------ Creates ILCSoft.cmake --------------
+
+INCLUDE( CreateILCSoftCMake )
+LIST( APPEND CMAKE_MODULE_PATH ${ILCSOFT_PATH} )
 
 ###################################
 
@@ -93,8 +121,6 @@ SET( common_cmake_args
 )
 
 INCLUDE( DetectDistribution )
-
-SET ( ILCSOFT_PATH  ${CMAKE_CURRENT_SOURCE_DIR}/ilcsoft )
 
 # ------------ CLHEP ----------
 
@@ -159,7 +185,7 @@ ILCSoftPackage_Add( CED
     GIT_TAG ${CED_version}
     SOURCE_DIR ${ILCSOFT_PATH}/CED/${CED_version}/CED
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_PREFIX_PATH=${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
     BINARY_DIR ${ILCSOFT_PATH}/CED/${CED_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/CED/${CED_version}
@@ -174,8 +200,8 @@ ILCSoftPackage_Add( CONDDB
     GIT_TAG ${CONDDB_version}
     SOURCE_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/CondDBMySQL
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DCMAKE_PREFIX_PATH=${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}
-    BINARY_DIR ${ILCSOFT_PATH}/CondDBMySQL/build
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}
     LIST_SEPARATOR %
@@ -225,9 +251,80 @@ ILCSoftPackage_Add( ROOT
     LIST_SEPARATOR %
 )
 
-# ------ Creates ILCSoft.cmake --------------
+# ------ MarlinUtil ------------------
 
-INCLUDE( CreateILCSoftCMake )
+ILCSoftPackage_Add( MarlinUtil
+    DEPENDS ILCUTIL Marlin CED CLHEP GSL
+    GIT_REPOSITORY ${MarlinUtil_repository}
+    GIT_TAG ${MarlinUtil_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/MarlinUtil
+    UPDATE_COMMAND ""
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}
+    LIST_SEPARATOR %
+)
+
+# ------ Gear ---------------------
+
+ILCSoftPackage_Add( GEAR
+    DEPENDS ROOT ILCUTIL
+    GIT_REPOSITORY ${GEAR_repository}
+    GIT_TAG ${GEAR_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}/gear
+    UPDATE_COMMAND ""
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DGEAR_TGEO=ON
+    BINARY_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_DIR ${ILCSOFT_PATH}/gear/${GEAR_version}
+    LIST_SEPARATOR %
+)
+
+# ------ LCIO ---------------------
+
+ILCSoftPackage_Add( LCIO
+    DEPENDS ROOT
+    GIT_REPOSITORY ${LCIO_repository}
+    GIT_TAG ${LCIO_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}/LCIO
+    UPDATE_COMMAND ""
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DBUILD_ROOTDICT=ON
+    BINARY_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_DIR ${ILCSOFT_PATH}/LCIO/${LCIO_version}
+    LIST_SEPARATOR %
+)
+
+# ------ Marlin ---------------------
+
+ILCSoftPackage_Add( Marlin
+    DEPENDS ILCUTIL LCIO GEAR CLHEP LCCD 
+    GIT_REPOSITORY ${MARLIN_repository}
+    GIT_TAG ${MARLIN_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}/Marlin
+    UPDATE_COMMAND ""
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -DMARLIN_AIDA=OFF 
+    BINARY_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_DIR ${ILCSOFT_PATH}/Marlin/${MARLIN_version}
+    LIST_SEPARATOR %
+)
+
+# ------ LCCD ---------------------
+
+ILCSoftPackage_Add( LCCD
+    DEPENDS ILCUTIL LCIO CONDDB
+    GIT_REPOSITORY ${LCCD_repository}
+    GIT_TAG ${LCCD_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/lccd
+    UPDATE_COMMAND ""
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}
+    LIST_SEPARATOR %
+)
 
 # ------ Prepare init_ilcsoft.sh ------------
 
