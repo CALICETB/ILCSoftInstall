@@ -281,6 +281,21 @@ ILCSoftPackage_Add( LCIO
     LIST_SEPARATOR %
 )
 
+# ------ LCCD ---------------------
+
+ILCSoftPackage_Add( LCCD
+    DEPENDS ILCUTIL LCIO CONDDB
+    GIT_REPOSITORY ${LCCD_repository}
+    GIT_TAG ${LCCD_version}
+    SOURCE_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/lccd
+    UPDATE_COMMAND ""
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+    BINARY_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}
+    LIST_SEPARATOR %
+)
+
 # ------ Marlin ---------------------
 
 ILCSoftPackage_Add( MARLIN
@@ -308,21 +323,6 @@ ILCSoftPackage_Add( MarlinUtil
     BINARY_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/MarlinUtil/${MarlinUtil_version}
-    LIST_SEPARATOR %
-)
-
-# ------ LCCD ---------------------
-
-ILCSoftPackage_Add( LCCD
-    DEPENDS ILCUTIL LCIO CONDDB
-    GIT_REPOSITORY ${LCCD_repository}
-    GIT_TAG ${LCCD_version}
-    SOURCE_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/lccd
-    UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
-    BINARY_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}/build
-    BUILD_COMMAND make -j4
-    INSTALL_DIR ${ILCSOFT_PATH}/lccd/${LCCD_version}
     LIST_SEPARATOR %
 )
 
