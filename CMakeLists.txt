@@ -15,7 +15,7 @@ SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" ON )
 OPTION( BUILD_QT "Set to OFF to disable Qt build" ON )
 OPTION( BUILD_BOOST "Set to OFF to disable BOOST build" ON )
-OPTION( BUILD_MYSQL "Set to OFF to disable MySQL build" OFF )
+OPTION( BUILD_MYSQL "Set to OFF to disable MySQL build" ON )
 
 #################################################################
 # Require C++11                                                 #
