@@ -73,7 +73,7 @@ SET( ILCUTIL_repository    "https://github.com/iLCSoft/iLCUtil.git" )
 SET( CED_repository        "https://github.com/iLCSoft/CED.git" )
 SET( CONDDB_repository     "https://github.com/iLCSoft/CondDBMySQL.git" )
 SET( BOOST_repository      "https://github.com/boostorg/boost.git" )
-SET( MYQSL_repository      "http://dev.mysql.com/get/Downloads/MySQL-5.1/mysql-${MYSQL_version}.tar.gz" )
+SET( MYSQL_repository      "http://dev.mysql.com/get/Downloads/MySQL-5.1/mysql-${MYSQL_version}.tar.gz" )
 
 ### Core
 SET( MARLIN_repository      "https://github.com/iLCSoft/Marlin.git" )
@@ -178,9 +178,9 @@ execute_process(
 	WORKING_DIRECTORY ${ILCSOFT_PATH}
 	)
 	
-ENDIF()
-
 LIST( APPEND Modules mysql/${MYSQL_version} )
+	
+ENDIF()
 
 ENDIF()
 

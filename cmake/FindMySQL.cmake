@@ -1,113 +1,115 @@
-#--------------------------------------------------------
-# Copyright (C) 1995-2007 MySQL AB
+#############################################################
+# cmake module for finding mysqlclient
 #
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of version 2 of the GNU General Public License as
-# published by the Free Software Foundation.
+# returns:
+#   MySQL_FOUND        : set to TRUE or FALSE
+#   MySQL_VERSION      : package version
+#   MySQL_INCLUDE_DIRS : paths to mysql includes
+#   MySQL_LIBRARY_DIRS : paths to mysql libraries
+#   MySQL_LIBRARIES    : list of mysql libraries
 #
-# There are special exceptions to the terms and conditions of the GPL
-# as it is applied to this software. View the full text of the exception
-# in file LICENSE.exceptions in the top-level directory of this software
-# distribution.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
-#
-# The MySQL Connector/ODBC is licensed under the terms of the
-# GPL, like most MySQL Connectors. There are special exceptions
-# to the terms and conditions of the GPL as it is applied to
-# this software, see the FLOSS License Exception available on
-# mysql.com.
-
-##########################################################################
+# @author Jan Engels, DESY
+#############################################################
 
 
-#-------------- FIND MYSQL_INCLUDE_DIR ------------------
-FIND_PATH(MYSQL_INCLUDE_DIR mysql.h
-  /usr/include/mysql
-  /usr/local/include/mysql
-  /opt/mysql/mysql/include
-  /opt/mysql/mysql/include/mysql
-  /opt/mysql/include
-  /opt/local/include/mysql5
-  /usr/local/mysql/include
-  /usr/local/mysql/include/mysql
-  $ENV{ProgramFiles}/MySQL/*/include
-  $ENV{SystemDrive}/MySQL/*/include)
+# ------------- mysql_config  --------------------------------
+SET( MySQL_CONFIG_EXECUTABLE MySQL_CONFIG_EXECUTABLE-NOTFOUND )
+MARK_AS_ADVANCED( MySQL_CONFIG_EXECUTABLE )
+FIND_PROGRAM( MySQL_CONFIG_EXECUTABLE mysql_config PATHS ${MySQL_DIR}/bin NO_DEFAULT_PATH )
+IF( NOT MySQL_DIR )
+    FIND_PROGRAM( MySQL_CONFIG_EXECUTABLE mysql_config )
+ENDIF()
 
-#----------------- FIND MYSQL_LIB_DIR -------------------
-IF (WIN32)
-  # Set lib path suffixes
-  # dist = for mysql binary distributions
-  # build = for custom built tree
-  IF (CMAKE_BUILD_TYPE STREQUAL Debug)
-    SET(libsuffixDist debug)
-    SET(libsuffixBuild Debug)
-  ELSE (CMAKE_BUILD_TYPE STREQUAL Debug)
-    SET(libsuffixDist opt)
-    SET(libsuffixBuild Release)
-    ADD_DEFINITIONS(-DDBUG_OFF)
-  ENDIF (CMAKE_BUILD_TYPE STREQUAL Debug)
+IF( MySQL_CONFIG_EXECUTABLE )
 
-  FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient
-    PATHS
-    $ENV{MYSQL_DIR}/lib/${libsuffixDist}
-    $ENV{MYSQL_DIR}/libmysql
-    $ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}
-    $ENV{MYSQL_DIR}/client/${libsuffixBuild}
-    $ENV{MYSQL_DIR}/libmysql/${libsuffixBuild}
-    $ENV{ProgramFiles}/MySQL/*/lib/${libsuffixDist}
-    $ENV{SystemDrive}/MySQL/*/lib/${libsuffixDist})
-ELSE (WIN32)
-  FIND_LIBRARY(MYSQL_LIB NAMES mysqlclient_r mysqlclient
-    PATHS
-    /usr/lib/mysql
-    /usr/local/lib/mysql
-    /usr/local/mysql/lib
-    /usr/local/mysql/lib/mysql
-    /opt/local/mysql5/lib
-    /opt/local/lib/mysql5/mysql
-    /opt/mysql/mysql/lib/mysql
-    /opt/mysql/lib/mysql)
-ENDIF (WIN32)
+    # ==============================================
+    # ===          MySQL_VERSION                   ===
+    # ==============================================
+    INCLUDE( MacroCheckPackageVersion )
 
-IF(MYSQL_LIB)
-  GET_FILENAME_COMPONENT(MYSQL_LIB_DIR ${MYSQL_LIB} PATH)
-ENDIF(MYSQL_LIB)
+    EXECUTE_PROCESS( COMMAND "${MySQL_CONFIG_EXECUTABLE}" --version
+        OUTPUT_VARIABLE MySQL_VERSION
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( _exit_code EQUAL 0 )
+        CHECK_PACKAGE_VERSION( MySQL ${MySQL_VERSION} )
+    ELSE()
+        SET( MySQL_VERSION )
+    ENDIF()
 
-IF (MYSQL_INCLUDE_DIR AND MYSQL_LIB_DIR)
-  SET(MYSQL_FOUND TRUE)
+ENDIF( MySQL_CONFIG_EXECUTABLE )
 
-  INCLUDE_DIRECTORIES(${MYSQL_INCLUDE_DIR})
-  LINK_DIRECTORIES(${MYSQL_LIB_DIR})
 
-  FIND_LIBRARY(MYSQL_ZLIB zlib PATHS ${MYSQL_LIB_DIR})
-  FIND_LIBRARY(MYSQL_TAOCRYPT taocrypt PATHS ${MYSQL_LIB_DIR})
-  IF (MYSQL_LIB)
-    SET(MYSQL_CLIENT_LIBS ${MYSQL_LIB})
-  ELSE()
-    SET(MYSQL_CLIENT_LIBS mysqlclient_r)
-  ENDIF()
-  IF (MYSQL_ZLIB)
-    SET(MYSQL_CLIENT_LIBS ${MYSQL_CLIENT_LIBS} zlib)
-  ENDIF (MYSQL_ZLIB)
-  IF (MYSQL_TAOCRYPT)
-    SET(MYSQL_CLIENT_LIBS ${MYSQL_CLIENT_LIBS} taocrypt)
-  ENDIF (MYSQL_TAOCRYPT)
-  # Added needed mysqlclient dependencies on Windows
-  IF (WIN32)
-    SET(MYSQL_CLIENT_LIBS ${MYSQL_CLIENT_LIBS} ws2_32)
-  ENDIF (WIN32)
+# ------------- include dirs ---------------------------------
+SET( MySQL_INCLUDE_DIRS MySQL_INCLUDE_DIRS-NOTFOUND )
+MARK_AS_ADVANCED( MySQL_INCLUDE_DIRS )
 
-  MESSAGE(STATUS "MySQL Include dir: ${MYSQL_INCLUDE_DIR}  library dir: ${MYSQL_LIB_DIR}")
-  MESSAGE(STATUS "MySQL client libraries: ${MYSQL_CLIENT_LIBS}")
-ELSEIF (MySQL_FIND_REQUIRED)
-  MESSAGE(FATAL_ERROR "Cannot find MySQL. Include dir: ${MYSQL_INCLUDE_DIR}  library dir: ${MYSQL_LIB_DIR}")
-ENDIF (MYSQL_INCLUDE_DIR AND MYSQL_LIB_DIR)
+# WARNING: if using CMAKE_FIND_ROOT_PATH to define the installation path of mysql
+#           the following FIND_PATH commando finds the wrong mysql installation because PATH_SUFFIXES is used ... !?
+#           if PATHS are expanded or CMAKE_PREFIX_PATH is used instead of CMAKE_FIND_ROOT_PATH the problem goes away
+#FIND_PATH( MySQL_INCLUDE_DIRS NAMES mysql.h PATHS ${MySQL_DIR} PATH_SUFFIXES include include/mysql include/mysql5/mysql NO_DEFAULT_PATH )
+FIND_PATH( MySQL_INCLUDE_DIRS NAMES mysql.h PATHS ${MySQL_DIR}/include ${MySQL_DIR}/include/mysql ${MySQL_DIR}/include/mysql5/mysql NO_DEFAULT_PATH )
+
+# if not found in MySQL_DIR / CMAKE_PREFIX_PATH / CMAKE_INCLUDE_PATH or CMAKE_FIND_ROOT_PATH ...
+# look into the following locations
+IF( NOT MySQL_DIR )
+    FIND_PATH( MySQL_INCLUDE_DIRS NAMES mysql.h PATHS
+        /usr
+        /usr/local
+        /opt/local
+        /opt/products/mysql/5.0.45
+        /opt/products/mysql/5.0.26
+        PATH_SUFFIXES include include/mysql include/mysql5/mysql
+    )
+ENDIF()
+
+
+
+
+# ------------- libraries ------------------------------------
+SET( MySQL_LIBRARIES MySQL_LIBRARIES-NOTFOUND )
+MARK_AS_ADVANCED( MySQL_LIBRARIES )
+
+# WARNING: see WARNING for MySQL_INCLUDE_DIRS above !
+#FIND_LIBRARY( MySQL_LIBRARIES NAMES mysqlclient mysqlclient_r PATHS ${MySQL_DIR}
+#    PATH_SUFFIXES lib64 lib64/mysql lib64/mysql5/mysql lib lib/mysql lib/mysql5/mysql
+#    NO_DEFAULT_PATH
+#)
+
+FIND_LIBRARY( MySQL_LIBRARIES NAMES mysqlclient mysqlclient_r PATHS
+    ${MySQL_DIR}/lib64
+    ${MySQL_DIR}/lib64/mysql
+    ${MySQL_DIR}/lib64/mysql5/mysql
+    ${MySQL_DIR}/lib
+    ${MySQL_DIR}/lib/mysql
+    ${MySQL_DIR}/lib/mysql5/mysql
+    NO_DEFAULT_PATH
+)
+
+# if not found in MySQL_DIR / CMAKE_PREFIX_PATH / CMAKE_LIBRARY_PATH or CMAKE_FIND_ROOT_PATH ...
+# look into the following locations:
+IF( NOT MySQL_DIR )
+    FIND_LIBRARY( MySQL_LIBRARIES NAMES mysqlclient mysqlclient_r PATHS
+        /usr
+        /usr/local
+        /opt/local
+        /opt/products/mysql/5.0.45
+        /opt/products/mysql/5.0.26
+        PATH_SUFFIXES lib64 lib64/mysql lib64/mysql5/mysql lib lib/mysql lib/mysql5/mysql
+    )
+ENDIF()
+IF( MySQL_LIBRARIES )
+    GET_FILENAME_COMPONENT( MySQL_LIBRARY_DIRS ${MySQL_LIBRARIES} PATH )
+    MARK_AS_ADVANCED( MySQL_LIBRARY_DIRS )
+ENDIF( MySQL_LIBRARIES )
+
+
+
+# ---------- final checking ---------------------------------------------------
+INCLUDE( FindPackageHandleStandardArgs )
+# set MySQL_FOUND to TRUE if all listed variables are TRUE and not empty
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( MySQL DEFAULT_MSG MySQL_INCLUDE_DIRS MySQL_LIBRARIES PACKAGE_VERSION_COMPATIBLE )
+
+SET( MySQL_FOUND ${MYSQL_FOUND} )
+

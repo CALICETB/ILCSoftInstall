@@ -25,7 +25,7 @@ ENDIF()
 IF ( BUILD_MYSQL )
 
 ILCSoftPackage_Add( MYSQL
-	DOWNLOAD_COMMAND wget ${MYSQL_repository} && tar xzf mysql-${MYSQL_version}.tar.gz
+	DOWNLOAD_COMMAND wget ${MYSQL_repository} && tar xzf mysql-${MYSQL_version}.tar.gz --strip 1 -C ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql
     SOURCE_DIR ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql
     UPDATE_COMMAND ""
     CONFIGURE_COMMAND ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql/configure --prefix=${ILCSOFT_PATH}/mysql/${MYSQL_version}
@@ -128,12 +128,12 @@ ILCSoftPackage_Add( CED
 # ------------ CONDDB ----------
 
 ILCSoftPackage_Add( CONDDB
-    DEPENDS ILCUTIL
+    DEPENDS ILCUTIL MYSQL
     GIT_REPOSITORY ${CONDDB_repository}
     GIT_TAG ${CONDDB_version}
     SOURCE_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/CondDBMySQL
     UPDATE_COMMAND ""
-    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> -C ${ILCSOFT_PATH}/ILCSoft.cmake
+    CMAKE_ARGS ${common_cmake_args} -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR> IF BUILD_MYSQL THEN -DMySQL_DIR=${ILCSOFT_PATH}/mysql/${MYSQL_version} ENDIF -C ${ILCSOFT_PATH}/ILCSoft.cmake
     BINARY_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/build
     BUILD_COMMAND make -j4
     INSTALL_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}
@@ -194,7 +194,6 @@ ILCSoftPackage_Add( ROOT
                                     --disable-oracle
 				                    --disable-gfal
                                     --enable-python
-                                    --disable-fortran
                                     --enable-roofit
                                     --enable-table
                                     IF BUILD_QT THEN
