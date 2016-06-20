@@ -1,6 +1,6 @@
 # ------------ BOOST ----------
 
-IF ( ENABLE_BOOST )
+IF ( BUILD_BOOST )
 
 ILCSoftPackage_Add( BOOST
 	GIT_REPOSITORY ${BOOST_repository}
@@ -15,6 +15,41 @@ ILCSoftPackage_Add( BOOST
     									--link=shared
     									-j4
     INSTALL_COMMAND ""
+    LIST_SEPARATOR %
+)
+
+ENDIF()
+
+# ------------ MySQL ----------
+
+IF ( BUILD_MYSQL )
+
+ILCSoftPackage_Add( MYSQL
+	DOWNLOAD_COMMAND ${MYSQL_repository} && tar xzf mysql-${MYSQL_version}.tar.gz
+    SOURCE_DIR ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql
+    UPDATE_COMMAND ""
+    CONFIGURE_COMMAND ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql/configure ./configure --prefix=${ILCSOFT_PATH}/mysql/${MYSQL_version}
+																						 --with-system-type=debian-linux-gnu
+																						 --enable-shared
+																						 --enable-static
+																						 --enable-thread-safe-client
+																						 --enable-assembler
+																						 --enable-local-infile
+																						 --with-fast-mutexes
+																						 --with-big-tables
+																						 --with-unix-socket-path=/var/run/mysqld/mysqld.sock
+																						 --with-mysqld-user=mysql
+																						 --with-libwrap
+																						 --with-readline
+																						 --with-ssl
+																						 --without-docs
+																						 --with-extra-charsets=all
+																						 --with-plugins=max
+																						 --with-embedded-server
+																						 --with-embedded-privilege-control
+    BINARY_DIR ${ILCSOFT_PATH}/mysql/${MYSQL_version}/build
+    BUILD_COMMAND make -j4
+    INSTALL_COMMAND make install
     LIST_SEPARATOR %
 )
 
@@ -106,16 +141,16 @@ ILCSoftPackage_Add( CONDDB
 
 # ----- QT package -----
 
-IF( ENABLE_QT )
+IF( BUILD_QT )
 
 ILCSoftPackage_Add( QT
     URL ${QT_repository}
     SOURCE_DIR ${ILCSOFT_PATH}/QT/${QT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ./configure -debug-and-release -opensource -confirm-license -no-qt3support -webkit -nomake examples -nomake demos
+    CONFIGURE_COMMAND ./configure -prefix ${ILCSOFT_PATH}/QT/${QT_version} -opensource -confirm-license -fast -make libs -no-separate-debug-info -no-xkb -no-xinerama
     BUILD_COMMAND make -j4
-    INSTALL_COMMAND ""
+    INSTALL_COMMAND make install
     LIST_SEPARATOR %
 )
 

@@ -13,8 +13,9 @@ SET( ${PROJECT_NAME}_VERSION_MINOR 0 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
 OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" ON )
-OPTION( ENABLE_QT "Set to OFF to disable Qt build" ON )
-OPTION( ENABLE_BOOST "Set to OFF to disable BOOST build" ON )
+OPTION( BUILD_QT "Set to OFF to disable Qt build" ON )
+OPTION( BUILD_BOOST "Set to OFF to disable BOOST build" ON )
+OPTION( BUILD_MYSQL "Set to OFF to disable MySQL build" OFF )
 
 #################################################################
 # Require C++11                                                 #
@@ -51,6 +52,7 @@ SET( CED_version      "v01-09-02")
 SET( CONDDB_version   "CondDBMySQL_ILC-0-9-6")
 SET( XERCES_version   "3.1.3")
 SET( BOOST_version    "1.58.0" )
+SET( MYSQL_version    "5.1.73" )
 
 ### Core
 SET( MARLIN_version      "v01-08" )
@@ -71,6 +73,7 @@ SET( ILCUTIL_repository    "https://github.com/iLCSoft/iLCUtil.git" )
 SET( CED_repository        "https://github.com/iLCSoft/CED.git" )
 SET( CONDDB_repository     "https://github.com/iLCSoft/CondDBMySQL.git" )
 SET( BOOST_repository      "https://github.com/boostorg/boost.git" )
+SET( MYQSL_repository      "http://dev.mysql.com/get/Downloads/MySQL-5.1/mysql-${MYSQL_version}.tar.gz" )
 
 ### Core
 SET( MARLIN_repository      "https://github.com/iLCSoft/Marlin.git" )
@@ -94,7 +97,7 @@ LIST( APPEND Modules GSL/${GSL_version} )
 LIST( APPEND Modules xerces/${XERCES_version} )
 LIST( APPEND Modules ilcutil/${ILCUTIL_version} )
 LIST( APPEND Modules CED/${CED_version} )
-IF( ENABLE_QT )
+IF( BUILD_QT )
 LIST( APPEND Modules QT/${QT_version} )
 ENDIF()
 LIST( APPEND Modules CondDBMySQL/${CONDDB_version} )
@@ -104,13 +107,12 @@ LIST( APPEND Modules Marlin/${MARLIN_version} )
 LIST( APPEND Modules LCIO/${LCIO_version} )
 LIST( APPEND Modules lccd/${LCCD_version} )
 LIST( APPEND Modules gear/${GEAR_version} )
-IF( ENABLE_BOOST )
+IF( BUILD_BOOST )
 LIST( APPEND Modules boost/${BOOST_version} )
 ENDIF()
-
-# ------ Creates ILCSoft.cmake --------------
-
-INCLUDE( CreateILCSoftCMake )
+IF( BUILD_MYSQL )
+LIST( APPEND Modules mysql/${MYSQL_version} )
+ENDIF()
 
 ###################################
 
@@ -149,7 +151,44 @@ FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "export ILCSOFT=${ILCSOFT_PATH}" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 
+# ------- Create MySQL environment and make symbolic link in ILCSOFT_PATH ------
+
+IF( NOT BUILD_MYSQL )
+
+IF( NOT MYSQL_DIR )
+MESSAGE ( FATAL_ERROR "Provide MYSQL_DIR as CMake argument like -DMYSQL_DIR=/usr" )
+ENDIF()
+
+FIND_PACKAGE( MySQL REQUIRED )
+
+IF ( MYSQL_FOUND )
+
+execute_process( 
+	COMMAND mkdir mysql
+	WORKING_DIRECTORY ${ILCSOFT_PATH}
+	)
+
+execute_process( 
+	COMMAND ln -s ${MYSQL_DIR} ${MYSQL_version}
+	WORKING_DIRECTORY ${ILCSOFT_PATH}/mysql
+	)
+	
+execute_process( 
+	COMMAND ${CMAKE_COMMAND} -DILCSOFT_PATH=${ILCSOFT_PATH} -Dname=MYSQL -Dtargetdir=${ILCSOFT_PATH}/mysql/${MYSQL_version} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WriteInit.cmake
+	WORKING_DIRECTORY ${ILCSOFT_PATH}
+	)
+	
+ENDIF()
+
+LIST( APPEND Modules mysql/${MYSQL_version} )
+
+ENDIF()
+
 MESSAGE( STATUS "Writing init_ilcsoft.sh in ${ILCSOFT_PATH}" )
+
+# ------ Creates ILCSoft.cmake --------------
+
+INCLUDE( CreateILCSoftCMake )
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
