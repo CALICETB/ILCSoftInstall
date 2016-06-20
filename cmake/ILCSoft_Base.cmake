@@ -25,31 +25,32 @@ ENDIF()
 IF ( BUILD_MYSQL )
 
 ILCSoftPackage_Add( MYSQL
-	DOWNLOAD_COMMAND ${MYSQL_repository} && tar xzf mysql-${MYSQL_version}.tar.gz
+	DOWNLOAD_COMMAND wget ${MYSQL_repository} && tar xzf mysql-${MYSQL_version}.tar.gz
     SOURCE_DIR ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql
     UPDATE_COMMAND ""
-    CONFIGURE_COMMAND ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql/configure ./configure --prefix=${ILCSOFT_PATH}/mysql/${MYSQL_version}
-																						 --with-system-type=debian-linux-gnu
-																						 --enable-shared
-																						 --enable-static
-																						 --enable-thread-safe-client
-																						 --enable-assembler
-																						 --enable-local-infile
-																						 --with-fast-mutexes
-																						 --with-big-tables
-																						 --with-unix-socket-path=/var/run/mysqld/mysqld.sock
-																						 --with-mysqld-user=mysql
-																						 --with-libwrap
-																						 --with-readline
-																						 --with-ssl
-																						 --without-docs
-																						 --with-extra-charsets=all
-																						 --with-plugins=max
-																						 --with-embedded-server
-																						 --with-embedded-privilege-control
+    CONFIGURE_COMMAND ${ILCSOFT_PATH}/mysql/${MYSQL_version}/mysql/configure --prefix=${ILCSOFT_PATH}/mysql/${MYSQL_version}
+																			 --with-system-type=debian-linux-gnu
+																			 --enable-shared
+																			 --enable-static
+																			 --enable-thread-safe-client
+																			 --enable-assembler
+																			 --enable-local-infile
+																			 --with-fast-mutexes
+																			 --with-big-tables
+																			 --with-unix-socket-path=/var/run/mysqld/mysqld.sock
+																			 --with-mysqld-user=mysql
+																			 --with-libwrap
+																			 --with-readline
+																			 --with-ssl
+																			 --without-docs
+																			 --with-extra-charsets=all
+																			 --with-plugins=max
+																			 --with-embedded-server
+																			 --with-embedded-privilege-control
     BINARY_DIR ${ILCSOFT_PATH}/mysql/${MYSQL_version}/build
     BUILD_COMMAND make -j4
     INSTALL_COMMAND make install
+    INSTALL_DIR ${ILCSOFT_PATH}/mysql/${MYSQL_version}
     LIST_SEPARATOR %
 )
 
@@ -160,34 +161,45 @@ ENDIF()
 
 ILCSoftPackage_Add( ROOT
     DEPENDS GSL CLHEP XERCES
-    		IF ENABLE_QT THEN
+    		IF BUILD_QT THEN
     		QT
+    		ENDIF
+    		IF BUILD_MYSQL THEN
+    		MYSQL
     		ENDIF
     URL ${ROOT_repository}
     SOURCE_DIR ${ILCSOFT_PATH}/root/${ROOT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND   IF ENABLE_QT THEN 
-    					export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && 
-    					ENDIF 
-    					./configure --with-cc=${CMAKE_C_COMPILER}
+    CONFIGURE_COMMAND IF BUILD_QT THEN 
+    				  export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && 
+    				  ENDIF 
+    				  ./configure --with-cc=${CMAKE_C_COMPILER}
                                     --with-cxx=${CMAKE_CXX_COMPILER}
                                     --with-ld=${CMAKE_CXX_COMPILER}
                                     --fail-on-missing
+                                    --enable-builtin-pcre 
+                                    --enable-explicitlink 
+                                    --enable-soversion
                                     --enable-gdml
                                     --enable-genvector
                                     --enable-krb5
                                     --enable-mathmore
                                     --enable-minuit2
                                     --enable-mysql
+                                    --enable-unuran
+                                    --enable-gsl-shared 
+                                    --with-gsl-incdir=${ILCSOFT_PATH}/GSL/${GSL_version}/include
+                                    --with-gsl-libdir=${ILCSOFT_PATH}/GSL/${GSL_version}/lib
                                     --disable-oracle
 				                    --disable-gfal
                                     --enable-python
-                                    IF ENABLE_QT THEN
-                                    --enable-qt
-                                    ENDIF
+                                    --disable-fortran
                                     --enable-roofit
                                     --enable-table
+                                    IF BUILD_QT THEN
+                                    --enable-qt
+                                    ENDIF
     BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
