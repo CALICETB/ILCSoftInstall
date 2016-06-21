@@ -1,7 +1,21 @@
 # ILCSoftInstall
 ## CMake package to install all sub-packages for ilcsoft
 
-### Pre-Requisites
+### Pre-Requirements
+
+You need to have theses packages installed :
+ * python-dev
+ * libbz2-dev
+ * g++ 4.8 minimum
+ * ROOT Pre-requirements : https://root.cern.ch/build-prerequisites
+ * CMake 2.8 minimum 
+ * git
+ * OpenSSL
+ * subversion with neon/serf modules
+ * perl > 5.14
+ * python > 2.6
+ * JDK/JRE (Java development toolkit)
+ * /!\ Maybe some missing there /!\
 
 ### Options
  * ENABLE_C++11 (default ON) to build using c++11
