@@ -104,10 +104,6 @@ IF( MySQL_LIBRARIES )
     MARK_AS_ADVANCED( MySQL_LIBRARY_DIRS )
 ENDIF( MySQL_LIBRARIES )
 
-IF( MySQL_DIR )
-MARK_AS_ADVANCED( MySQL_DIR )
-ENDIF()
-
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set MySQL_FOUND to TRUE if all listed variables are TRUE and not empty
