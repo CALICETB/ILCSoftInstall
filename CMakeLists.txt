@@ -190,7 +190,8 @@ IF( NOT BUILD_MYSQL )
 FIND_PACKAGE( MySQL REQUIRED )
 IF ( MYSQL_FOUND )
 
-MESSAGE ( STATUS "MySQL found in ${MYSQL_DIR}" )
+SET( MYSQL_DIR ${MySQL_DIR} )
+MESSAGE( STATUS "MySQL found in ${MYSQL_DIR}" )
 
 execute_process( 
 	COMMAND mkdir mysql
