@@ -107,11 +107,35 @@ LIST( APPEND Modules Marlin/${MARLIN_version} )
 LIST( APPEND Modules LCIO/${LCIO_version} )
 LIST( APPEND Modules lccd/${LCCD_version} )
 LIST( APPEND Modules gear/${GEAR_version} )
+
 IF( BUILD_BOOST )
 LIST( APPEND Modules boost/${BOOST_version} )
 ENDIF()
+
 IF( BUILD_MYSQL )
 LIST( APPEND Modules mysql/${MYSQL_version} )
+ELSE()
+
+IF( NOT MYSQL_DIR )
+MESSAGE ( FATAL_ERROR "Provide MYSQL_DIR as CMake argument like -DMYSQL_DIR=/usr" )
+ENDIF()
+
+FIND_PACKAGE( MySQL REQUIRED )
+
+IF ( MYSQL_FOUND )
+
+execute_process( 
+	COMMAND mkdir mysql
+	WORKING_DIRECTORY ${ILCSOFT_PATH}
+	)
+
+execute_process( 
+	COMMAND ln -s ${MYSQL_DIR} ${MYSQL_version}
+	WORKING_DIRECTORY ${ILCSOFT_PATH}/mysql
+	)
+LIST( APPEND Modules mysql/${MYSQL_version} )
+
+ENDIF()
 ENDIF()
 
 ###################################
@@ -153,36 +177,10 @@ FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 
 # ------- Create MySQL environment and make symbolic link in ILCSOFT_PATH ------
 
-IF( NOT BUILD_MYSQL )
-
-IF( NOT MYSQL_DIR )
-MESSAGE ( FATAL_ERROR "Provide MYSQL_DIR as CMake argument like -DMYSQL_DIR=/usr" )
-ENDIF()
-
-FIND_PACKAGE( MySQL REQUIRED )
-
-IF ( MYSQL_FOUND )
-
-execute_process( 
-	COMMAND mkdir mysql
-	WORKING_DIRECTORY ${ILCSOFT_PATH}
-	)
-
-execute_process( 
-	COMMAND ln -s ${MYSQL_DIR} ${MYSQL_version}
-	WORKING_DIRECTORY ${ILCSOFT_PATH}/mysql
-	)
-	
 execute_process( 
 	COMMAND ${CMAKE_COMMAND} -DILCSOFT_PATH=${ILCSOFT_PATH} -Dname=MYSQL -Dtargetdir=${ILCSOFT_PATH}/mysql/${MYSQL_version} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WriteInit.cmake
 	WORKING_DIRECTORY ${ILCSOFT_PATH}
 	)
-	
-LIST( APPEND Modules mysql/${MYSQL_version} )
-	
-ENDIF()
-
-ENDIF()
 
 MESSAGE( STATUS "Writing init_ilcsoft.sh in ${ILCSOFT_PATH}" )
 
