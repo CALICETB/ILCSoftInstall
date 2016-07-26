@@ -104,7 +104,9 @@ IF( MySQL_LIBRARIES )
     MARK_AS_ADVANCED( MySQL_LIBRARY_DIRS )
 ENDIF( MySQL_LIBRARIES )
 
-
+IF( MySQL_DIR )
+MARK_AS_ADVANCED( MySQL_DIR )
+ENDIF()
 
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
