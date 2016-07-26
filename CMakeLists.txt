@@ -19,6 +19,10 @@ OPTION( BUILD_MYSQL "Set to OFF to disable MySQL build" ON )
 OPTION( BUILD_ROOT "Set to OFF to disable ROOT build" ON )
 OPTION( BUILD_CED "Set to OFF to disable CED build" OFF )
 OPTION( BUILD_CONDDB "Set to OFF to disable CondDB build" OFF )
+OPTION( BUILD_XERCES "Set to OFF to disable Xerces build" OFF )
+OPTION( BUILD_GSL "Set to OFF to disable GSL build" OFF )
+OPTION( BUILD_ILCUTIL "Set to OFF to disable ilcutil build" OFF )
+OPTION( BUILD_CLHEP "Set to OFF to disable CLHEP build" OFF )
 
 OPTION( BUILD_CORE "Set to OFF to disable ILCSoft Core build" OFF )
 
@@ -55,7 +59,7 @@ SET( GSL_version      "1.14")
 SET( ILCUTIL_version  "v01-02-01")
 SET( CED_version      "v01-09-02")
 SET( CONDDB_version   "CondDBMySQL_ILC-0-9-6")
-SET( XERCES_version   "3.1.3")
+SET( XERCES_version   "3.1.4")
 SET( BOOST_version    "1.58.0" )
 SET( MYSQL_version    "5.1.73" )
 
@@ -97,10 +101,18 @@ INCLUDE( ILCPackageAddMacro )
 
 # Append Modules to a list
 
+IF( BUILD_CLHEP )
 LIST( APPEND Modules CLHEP/${CLHEP_version} )
+ENDIF()
+IF( BUILD_GSL )
 LIST( APPEND Modules GSL/${GSL_version} )
+ENDIF()
+IF( BUILD_XERCES )
 LIST( APPEND Modules xerces/${XERCES_version} )
+ENDIF()
+IF( BUILD_ILCUTIL )
 LIST( APPEND Modules ilcutil/${ILCUTIL_version} )
+ENDIF()
 IF( BUILD_CED )
 LIST( APPEND Modules CED/${CED_version} )
 ENDIF()
@@ -145,6 +157,7 @@ execute_process(
 	COMMAND ln -s ${MYSQL_DIR} ${MYSQL_version}
 	WORKING_DIRECTORY ${ILCSOFT_PATH}/mysql
 	)
+	
 LIST( APPEND Modules mysql/${MYSQL_version} )
 
 ENDIF()
