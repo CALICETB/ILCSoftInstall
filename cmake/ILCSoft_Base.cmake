@@ -58,6 +58,8 @@ ENDIF()
 
 # ------------ CLHEP ----------
 
+IF( BUILD_CLHEP )
+
 ILCSoftPackage_Add( CLHEP
     DOWNLOAD_COMMAND wget ${CLHEP_repository} && tar xzf clhep-${CLHEP_version}.tgz -C ${ILCSOFT_PATH}/CLHEP
     SOURCE_DIR ${ILCSOFT_PATH}/CLHEP/${CLHEP_version}/CLHEP
@@ -69,7 +71,11 @@ ILCSoftPackage_Add( CLHEP
     LIST_SEPARATOR %
 )
 
+ENDIF()
+
 # ------------ GSL ----------
+
+IF( BUILD_GSL )
 
 ILCSoftPackage_Add( GSL
     DOWNLOAD_COMMAND wget ${GSL_repository} && tar xzf gsl-${GSL_version}.tar.gz --strip 1 -C ${ILCSOFT_PATH}/GSL/${GSL_version}/GSL
@@ -82,8 +88,11 @@ ILCSoftPackage_Add( GSL
     LIST_SEPARATOR %
 )
 
+ENDIF()
 
 # ------------ XERCES ----------
+
+IF( BUILD_XERCES )
 
 ILCSoftPackage_Add( XERCES
     DOWNLOAD_COMMAND wget ${XERCES_repository} && tar xzf xerces-c-${XERCES_version}.tar.gz --strip 1 -C ${ILCSOFT_PATH}/xerces/${XERCES_version}/xerces
@@ -96,7 +105,11 @@ ILCSoftPackage_Add( XERCES
     LIST_SEPARATOR %
 )
 
+ENDIF()
+
 # ------------ ILCUTIL ----------
+
+IF( BUILD_ILCUTIL )
 
 ILCSoftPackage_Add( ILCUTIL
     GIT_REPOSITORY ${ILCUTIL_repository}
@@ -109,6 +122,8 @@ ILCSoftPackage_Add( ILCUTIL
     INSTALL_DIR ${ILCSOFT_PATH}/ilcutil/${ILCUTIL_version}
     LIST_SEPARATOR %
 )
+
+ENDIF()
 
 # ------------ CED ----------
 
