@@ -183,14 +183,13 @@ FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 
 IF( NOT BUILD_MYSQL )
 
-#IF( NOT MYSQL_DIR )
-#MESSAGE ( FATAL_ERROR "Provide MYSQL_DIR as CMake argument like -DMYSQL_DIR=/usr" )
-#ENDIF()
+IF( NOT MYSQL_DIR )
+MESSAGE ( FATAL_ERROR "Provide MYSQL_DIR as CMake argument like -DMYSQL_DIR=/usr" )
+ENDIF()
 
 FIND_PACKAGE( MySQL REQUIRED )
 IF ( MYSQL_FOUND )
 
-SET( MYSQL_DIR ${MySQL_DIR} )
 MESSAGE( STATUS "MySQL found in ${MYSQL_DIR}" )
 
 execute_process( 
