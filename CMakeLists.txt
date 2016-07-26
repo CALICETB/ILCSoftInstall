@@ -139,13 +139,10 @@ ENDIF()
 IF( BUILD_MYSQL )
 LIST( APPEND Modules mysql/${MYSQL_version} )
 ELSE()
-
-IF( NOT MYSQL_DIR )
-MESSAGE ( FATAL_ERROR "Provide MYSQL_DIR as CMake argument like -DMYSQL_DIR=/usr" )
-ENDIF()
-
+#IF( NOT MYSQL_DIR )
+#MESSAGE ( FATAL_ERROR "Provide MYSQL_DIR as CMake argument like -DMYSQL_DIR=/usr" )
+#ENDIF()
 FIND_PACKAGE( MySQL REQUIRED )
-
 IF ( MYSQL_FOUND )
 
 execute_process( 
@@ -160,8 +157,7 @@ execute_process(
 	
 LIST( APPEND Modules mysql/${MYSQL_version} )
 
-ELSE()
-MESSAGE ( FATAL_ERROR "MYSQL package was not found!" )
+ENDIF()
 ENDIF()
 
 ###################################
