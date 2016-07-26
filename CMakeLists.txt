@@ -177,10 +177,12 @@ FILE( APPEND ${ILCSOFT_PATH}/init_ilcsoft.sh "\n" )
 
 # ------- Create MySQL environment and make symbolic link in ILCSOFT_PATH ------
 
+IF( NOT BUILD_MYSQL )
 execute_process( 
 	COMMAND ${CMAKE_COMMAND} -DILCSOFT_PATH=${ILCSOFT_PATH} -Dname=MYSQL -Dtargetdir=${ILCSOFT_PATH}/mysql/${MYSQL_version} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WriteInit.cmake
 	WORKING_DIRECTORY ${ILCSOFT_PATH}
 	)
+ENDIF()
 
 MESSAGE( STATUS "Writing init_ilcsoft.sh in ${ILCSOFT_PATH}" )
 
