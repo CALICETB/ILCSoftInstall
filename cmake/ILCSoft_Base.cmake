@@ -128,10 +128,7 @@ ILCSoftPackage_Add( CED
 # ------------ CONDDB ----------
 
 ILCSoftPackage_Add( CONDDB
-    DEPENDS ILCUTIL 
-    		IF BUILD_MYSQL THEN
-    		MYSQL
-    		ENDIF
+    DEPENDS ILCUTIL IF BUILD_MYSQL THEN MYSQL ENDIF
     GIT_REPOSITORY ${CONDDB_repository}
     GIT_TAG ${CONDDB_version}
     SOURCE_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/CondDBMySQL
@@ -163,20 +160,12 @@ ENDIF()
 # ------------ ROOT -----------
 
 ILCSoftPackage_Add( ROOT
-    DEPENDS GSL CLHEP XERCES
-    		IF BUILD_QT THEN
-    		QT
-    		ENDIF
-    		IF BUILD_MYSQL THEN
-    		MYSQL
-    		ENDIF
+    DEPENDS GSL CLHEP XERCES IF BUILD_QT THEN QT ENDIF IF BUILD_MYSQL THEN MYSQL ENDIF
     URL ${ROOT_repository}
     SOURCE_DIR ${ILCSOFT_PATH}/root/${ROOT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND IF BUILD_QT THEN 
-    				  export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && 
-    				  ENDIF 
+    CONFIGURE_COMMAND IF BUILD_QT THEN export QTDIR=${ILCSOFT_PATH}/QT/${QT_version} && ENDIF 
     				  ./configure --with-cc=${CMAKE_C_COMPILER}
                                     --with-cxx=${CMAKE_CXX_COMPILER}
                                     --with-ld=${CMAKE_CXX_COMPILER}
@@ -195,13 +184,11 @@ ILCSoftPackage_Add( ROOT
                                     --with-gsl-incdir=${ILCSOFT_PATH}/GSL/${GSL_version}/include
                                     --with-gsl-libdir=${ILCSOFT_PATH}/GSL/${GSL_version}/lib
                                     --disable-oracle
-				                    --disable-gfal
+				    --disable-gfal
                                     --enable-python
                                     --enable-roofit
                                     --enable-table
-                                    IF BUILD_QT THEN
-                                    --enable-qt
-                                    ENDIF
+                                    IF BUILD_QT THEN --enable-qt ENDIF
     BUILD_COMMAND make -j4
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
