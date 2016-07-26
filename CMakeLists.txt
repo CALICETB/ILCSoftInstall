@@ -12,10 +12,15 @@ SET( ${PROJECT_NAME}_VERSION_MAJOR 1 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 0 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
-OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" ON )
+OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" OFF )
 OPTION( BUILD_QT "Set to OFF to disable Qt build" ON )
 OPTION( BUILD_BOOST "Set to OFF to disable BOOST build" ON )
 OPTION( BUILD_MYSQL "Set to OFF to disable MySQL build" ON )
+OPTION( BUILD_ROOT "Set to OFF to disable ROOT build" ON )
+OPTION( BUILD_CED "Set to OFF to disable CED build" OFF )
+OPTION( BUILD_CONDDB "Set to OFF to disable CondDB build" OFF )
+
+OPTION( BUILD_CORE "Set to OFF to disable ILCSoft Core build" OFF )
 
 #################################################################
 # Require C++11                                                 #
@@ -96,18 +101,25 @@ LIST( APPEND Modules CLHEP/${CLHEP_version} )
 LIST( APPEND Modules GSL/${GSL_version} )
 LIST( APPEND Modules xerces/${XERCES_version} )
 LIST( APPEND Modules ilcutil/${ILCUTIL_version} )
+IF( BUILD_CED )
 LIST( APPEND Modules CED/${CED_version} )
+ENDIF()
 IF( BUILD_QT )
 LIST( APPEND Modules QT/${QT_version} )
 ENDIF()
+IF( BUILD_CONDDB )
 LIST( APPEND Modules CondDBMySQL/${CONDDB_version} )
+ENDIF()
+IF( BUILD_ROOT )
 LIST( APPEND Modules root/${ROOT_version} )
+ENDIF()
+IF( BUILD_CORE )
 LIST( APPEND Modules MarlinUtil/${MarlinUtil_version} )
 LIST( APPEND Modules Marlin/${MARLIN_version} )
 LIST( APPEND Modules LCIO/${LCIO_version} )
 LIST( APPEND Modules lccd/${LCCD_version} )
 LIST( APPEND Modules gear/${GEAR_version} )
-
+ENDIF()
 IF( BUILD_BOOST )
 LIST( APPEND Modules boost/${BOOST_version} )
 ENDIF()
@@ -165,7 +177,9 @@ INCLUDE( DetectDistribution )
 
 INCLUDE ( ILCSoft_Base )
 
+IF( BUILD_CORE)
 INCLUDE ( ILCSoft_Core )
+ENDIF()
 
 # ------ Prepare init_ilcsoft.sh ------------
 
