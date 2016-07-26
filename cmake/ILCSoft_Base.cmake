@@ -112,6 +112,8 @@ ILCSoftPackage_Add( ILCUTIL
 
 # ------------ CED ----------
 
+IF( BUILD_CED )
+
 ILCSoftPackage_Add( CED
     DEPENDS ILCUTIL
     GIT_REPOSITORY ${CED_repository}
@@ -125,7 +127,11 @@ ILCSoftPackage_Add( CED
     LIST_SEPARATOR %
 )
 
+ENDIF()
+
 # ------------ CONDDB ----------
+
+IF( BUILD_CONDDB )
 
 ILCSoftPackage_Add( CONDDB
     DEPENDS ILCUTIL IF BUILD_MYSQL THEN MYSQL ENDIF
@@ -139,6 +145,8 @@ ILCSoftPackage_Add( CONDDB
     INSTALL_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}
     LIST_SEPARATOR %
 )
+
+ENDIF()
 
 # ----- QT package -----
 
@@ -158,6 +166,8 @@ ILCSoftPackage_Add( QT
 ENDIF()
 
 # ------------ ROOT -----------
+
+IF(BUILD_ROOT)
 
 ILCSoftPackage_Add( ROOT
     DEPENDS GSL CLHEP XERCES IF BUILD_QT THEN QT ENDIF IF BUILD_MYSQL THEN MYSQL ENDIF
@@ -193,3 +203,5 @@ ILCSoftPackage_Add( ROOT
     INSTALL_COMMAND ""
     LIST_SEPARATOR %
 )
+
+ENDIF()
