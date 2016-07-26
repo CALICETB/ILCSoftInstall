@@ -160,7 +160,8 @@ execute_process(
 	
 LIST( APPEND Modules mysql/${MYSQL_version} )
 
-ENDIF()
+ELSE()
+MESSAGE ( FATAL_ERROR "MYSQL package was not found!" )
 ENDIF()
 
 ###################################
