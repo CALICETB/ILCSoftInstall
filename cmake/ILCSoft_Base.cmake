@@ -128,7 +128,10 @@ ILCSoftPackage_Add( CED
 # ------------ CONDDB ----------
 
 ILCSoftPackage_Add( CONDDB
-    DEPENDS ILCUTIL MYSQL
+    DEPENDS ILCUTIL 
+    		IF BUILD_MYSQL THEN
+    		MYSQL
+    		ENDIF
     GIT_REPOSITORY ${CONDDB_repository}
     GIT_TAG ${CONDDB_version}
     SOURCE_DIR ${ILCSOFT_PATH}/CondDBMySQL/${CONDDB_version}/CondDBMySQL
