@@ -14,7 +14,8 @@ You need to have theses packages installed :
  * subversion with neon/serf modules
  * perl > 5.14
  * python > 2.6
- * JDK/JRE (Java development toolkit)
+ * openjdk-7-jdk (Java development toolkit)
+ * libncurses5-dev
  * /!\ Maybe some missing there /!\
 
 ### Options
