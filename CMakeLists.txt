@@ -12,19 +12,19 @@ SET( ${PROJECT_NAME}_VERSION_MAJOR 1 )
 SET( ${PROJECT_NAME}_VERSION_MINOR 0 )
 SET( ${PROJECT_NAME}_VERSION_PATCH 0 )
 
-OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" OFF )
+OPTION( ENABLE_C++11 "Set to OFF to disable c++11 compilation" ON )
 OPTION( BUILD_QT "Set to OFF to disable Qt build" ON )
 OPTION( BUILD_BOOST "Set to OFF to disable BOOST build" ON )
 OPTION( BUILD_MYSQL "Set to OFF to disable MySQL build" ON )
 OPTION( BUILD_ROOT "Set to OFF to disable ROOT build" ON )
-OPTION( BUILD_CED "Set to OFF to disable CED build" OFF )
-OPTION( BUILD_CONDDB "Set to OFF to disable CondDB build" OFF )
-OPTION( BUILD_XERCES "Set to OFF to disable Xerces build" OFF )
-OPTION( BUILD_GSL "Set to OFF to disable GSL build" OFF )
-OPTION( BUILD_ILCUTIL "Set to OFF to disable ilcutil build" OFF )
-OPTION( BUILD_CLHEP "Set to OFF to disable CLHEP build" OFF )
+OPTION( BUILD_CED "Set to OFF to disable CED build" ON )
+OPTION( BUILD_CONDDB "Set to OFF to disable CondDB build" ON )
+OPTION( BUILD_XERCES "Set to OFF to disable Xerces build" ON )
+OPTION( BUILD_GSL "Set to OFF to disable GSL build" ON )
+OPTION( BUILD_ILCUTIL "Set to OFF to disable ilcutil build" ON )
+OPTION( BUILD_CLHEP "Set to OFF to disable CLHEP build" ON )
 
-OPTION( BUILD_CORE "Set to OFF to disable ILCSoft Core build" OFF )
+OPTION( BUILD_CORE "Set to OFF to disable ILCSoft Core build" ON )
 
 #################################################################
 # Require C++11                                                 #
@@ -48,7 +48,7 @@ ENDIF()
 
 ###############################
 # versions of ilcsoft subpackages
-# don't forget to update when releasing 
+# don't forget to update when releasing
 # e.g. SET( Qt_version "v01-00-00" )
 
 ### Base
@@ -59,7 +59,8 @@ SET( GSL_version      "1.14")
 SET( ILCUTIL_version  "v01-02-01")
 SET( CED_version      "v01-09-02")
 SET( CONDDB_version   "CondDBMySQL_ILC-0-9-6")
-SET( XERCES_version   "3.1.4")
+#SET( XERCES_version   "3.1.4")
+SET( XERCES_version   "3.2.0")
 SET( BOOST_version    "1.58.0" )
 SET( MYSQL_version    "5.1.73" )
 
@@ -192,21 +193,21 @@ IF ( MYSQL_FOUND )
 
 MESSAGE( STATUS "MySQL found in ${MYSQL_DIR}" )
 
-execute_process( 
+execute_process(
 	COMMAND mkdir mysql
 	WORKING_DIRECTORY ${ILCSOFT_PATH}
 	)
 
-execute_process( 
+execute_process(
 	COMMAND ln -s ${MYSQL_DIR} ${MYSQL_version}
 	WORKING_DIRECTORY ${ILCSOFT_PATH}/mysql
 	)
-	
-execute_process( 
+
+execute_process(
 	COMMAND ${CMAKE_COMMAND} -DILCSOFT_PATH=${ILCSOFT_PATH} -Dname=MYSQL -Dtargetdir=${ILCSOFT_PATH}/mysql/${MYSQL_version} -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/WriteInit.cmake
 	WORKING_DIRECTORY ${ILCSOFT_PATH}
 	)
-	
+
 LIST( APPEND Modules mysql/${MYSQL_version} )
 
 ENDIF()
