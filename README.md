@@ -16,6 +16,7 @@ You need to have theses packages installed :
  * python > 2.6
  * openjdk-7-jdk (Java development toolkit)
  * libncurses5-dev
+ * freeglut3-dev and opengl
  * /!\ Maybe some missing there /!\
 
 ### Options
