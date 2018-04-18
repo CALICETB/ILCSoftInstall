@@ -186,7 +186,8 @@ IF(BUILD_ROOT)
 
 ILCSoftPackage_Add( ROOT
     DEPENDS GSL CLHEP XERCES IF BUILD_QT THEN QT ENDIF IF BUILD_MYSQL THEN MYSQL ENDIF
-    URL ${ROOT_repository}
+    #URL ${ROOT_repository}
+    DOWNLOAD_COMMAND wget ${ROOT_repository} && tar xzf root_v${ROOT_version}.source.tar.gz --strip 1 -C ${ILCSOFT_PATH}/root/${ROOT_version}
     SOURCE_DIR ${ILCSOFT_PATH}/root/${ROOT_version}
     UPDATE_COMMAND ""
     BUILD_IN_SOURCE 1
